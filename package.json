@@ -1,0 +1,16 @@
+{
+  "name": "skeleton",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-karma" : "",
+    "grunt-contrib-watch" : "",
+    "grunt-contrib-uglify" : "",
+    "grunt-contrib-concat" : "",
+    "grunt-contrib-copy" : "",
+    "grunt-contrib-clean" : "",
+    "grunt-bower-install-simple" : "",
+    "grunt-contrib-sass" : ""
+}
+}

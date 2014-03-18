@@ -1,0 +1,39 @@
+{
+    "name": "skeleton-bitcollage",
+    "version": "0.0.1",
+    "homepage": "https://github.com/SerkanSipahi/skeleton",
+    "authors": [
+        "Serkan Sipahi <serkan.sipahi@yahoo.de>"
+    ],
+    "main": "skeleton.js",
+    "devDependencies": {
+        "requirejs": "~2.1.11",
+        "backbone": "~1.1.2",
+        "underscore": "~1.6.0"
+    },
+    "dependencies" : {
+        "classy-bitcollage" : "~0.6.1",
+        "bootstrap-sass-official" : "~3.1.1"
+    },
+    "keywords": [
+        "offcanvas",
+        "menu",
+        "mobile menu",
+        "flyout"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "skeleton.min.js",
+        "node_modules",
+        "bower_components",
+        "libs/vendor/sass",
+        "test",
+        "tests",
+        "karma.conf.js",
+        ".gitignore",
+        "bower.json",
+        "Gruntfile.js",
+        "package.json",
+        "README.md"
+    ]
+}
