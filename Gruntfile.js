@@ -54,6 +54,13 @@ module.exports = function(grunt) {
                 }
             }
         },
+        clean : {
+            bower : [
+                'bower_components',
+                'libs/vendor/js/*.js',
+                'libs/vendor/sass'
+            ]
+        },
         watch: {
             js : {
                 files: watch_files,
@@ -84,6 +91,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('default', ['jshint', 'sass', 'clean', 'watch']);
     grunt.registerTask('bower', [
+        'clean:bower',
         'bower-install-simple',
         'concat', 'copy'
     ]);
