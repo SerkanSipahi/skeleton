@@ -60,7 +60,10 @@ module.exports = function(grunt) {
                 'bower_components',
                 'vendor/js/*.js',
                 'vendor/scss/bootstrap',
-                'vendor/scss/bootstrap.scss'
+                'vendor/scss/bootstrap.scss',
+                'skeleton.css',
+                'skeleton.min.css',
+                'skeleton.min.js'
             ]
         },
         watch: {
