@@ -1,6 +1,8 @@
 .sass-cache
 node_modules
-vendor
+vendor/js/*.js
+vendor/scss/bootstrap/
+vendor/scss/bootstrap.scss
 bower_components
 skeleton.css
 skeleton.min.css

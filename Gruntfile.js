@@ -59,7 +59,8 @@ module.exports = function(grunt) {
                 '.sass-cache',
                 'bower_components',
                 'vendor/js/*.js',
-                'vendor/scss'
+                'vendor/scss/bootstrap',
+                'vendor/scss/bootstrap.scss'
             ]
         },
         watch: {
