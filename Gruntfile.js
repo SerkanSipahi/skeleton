@@ -34,7 +34,7 @@ module.exports = function(grunt) {
             sass: {
                 cwd : 'bower_components/bootstrap-sass-official/vendor/assets/stylesheets',
                 src : '**',
-                dest : 'libs/vendor/sass',
+                dest : 'vendor/scss',
                 flatten : false,
                 filter : 'isFile',
                 expand: true
@@ -43,22 +43,23 @@ module.exports = function(grunt) {
         concat: {
             classy: {
                 files: {
-                    'libs/vendor/js/classy.js': 'bower_components/classy-bitcollage/classy.js'
+                    'vendor/js/classy.js': 'bower_components/classy-bitcollage/classy.js'
                 }
             }
         },
         sass: {
             dist: {
                 files: {
-                    'libs/css/skeleton.css': 'libs/sass/styles.scss'
+                    'skeleton.css': 'scss/styles.scss'
                 }
             }
         },
         clean : {
             bower : [
+                '.sass-cache',
                 'bower_components',
-                'libs/vendor/js/*.js',
-                'libs/vendor/sass'
+                'vendor/js/*.js',
+                'vendor/scss'
             ]
         },
         watch: {
@@ -70,8 +71,8 @@ module.exports = function(grunt) {
                 }
             },
             sass : {
-                files: ['libs/sass/styles.scss'],
-                tasks: ['sass', 'clean'],
+                files: ['scss/*.scss'],
+                tasks: ['sass'],
                 options : {
                     livereload : true
                 }
@@ -89,11 +90,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bower-install-simple');
     grunt.loadNpmTasks('grunt-contrib-sass');
 
-    grunt.registerTask('default', ['jshint', 'sass', 'clean', 'watch']);
+    grunt.registerTask('default', ['jshint', 'sass', 'watch']);
     grunt.registerTask('bower', [
         'clean:bower',
         'bower-install-simple',
         'concat', 'copy'
     ]);
+    grunt.registerTask('clear', ['clean:bower']);
 
 };

@@ -1,4 +1,7 @@
 .sass-cache
 node_modules
-libs/vendor
+vendor
 bower_components
+skeleton.css
+skeleton.min.css
+skeleton.min.js
