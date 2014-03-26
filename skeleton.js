@@ -6,7 +6,7 @@
     Function.fn = Function.prototype;
 
     // > private properties
-    var _version          = '0.0.2',
+    var _version          = '0.0.4',
         _public           = {},
         _dataSetNamespace = 'sk',
         _defaults         = {

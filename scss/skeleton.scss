@@ -1,19 +1,30 @@
 /* Skeleton */
 
-.overflow-hidden   { oveflow : hidden; }
+.overflow-hidden   { overflow : hidden; }
 .overflow-auto     { overflow : auto;  }
 .position-relative { position : relative ; }
 .position-absolute { position : absolute ; }
 
-html { @extend .overflow-hidden; }
-
-body {
-
+body, html {
   @extend .overflow-hidden;
-  padding  : 0;
-  margin   : 0;
-  width    : 100%;
-  height   : 100%;
+  height : 100%;
+}
+
+$core-content-position : 0;
+@mixin createPositions($position, $align, $width) {
+    #{$position} : $width;
+	@if $align != default {
+		$core-content-position : abs($width) !global;
+	} @else {
+		$core-content-position : 0 !global;
+	}
+}
+
+@function getHorizontalPosition() {
+	@return $core-content-position;
+}
+@function getVerticalPosition() {
+	@return 999;
 }
 
 $core-main-wrapper-width     : 1200px !default;
@@ -24,103 +35,128 @@ $core-bottom-nav-height      :  100px !default;
 
 #skeleton {
 
-      @extend .overflow-hidden;
-      @extend .position-relative;
-      max-width : $core-main-wrapper-width;
-      margin    : 0 auto;
+    // > debug color
+    background-color: gray;
 
-      .sk-left-nav {
+    @extend .overflow-hidden;
+    @extend .position-relative;
 
-          @extend .overflow-auto;
-          @extend .position-absolute;
+    margin     : 0 auto;
+    max-width  : $core-main-wrapper-width;
+    height     : auto !important;
+    min-height : 100%;
 
-          left     : 0px;
-          width    : $core-left-nav-width;
-      }
-      .sk-content {
+    // > common atrributes
+    .sk-top-nav {
+        // > debug color
+        background-color: red;
+        @extend .overflow-hidden;
+        @extend .position-absolute;
+    }
+    .sk-left-nav {
+        // > debug color
+        background-color: green;
+        @extend .overflow-auto;
+        @extend .position-absolute;
+    }
+    .sk-content {
+        // > debug color
+        background-color: blue;
+        @extend .overflow-auto;
+        @extend .position-absolute;
+    }
+    .sk-right-nav {
+        // > debug color
+        background-color: yellow;
+        @extend .overflow-auto;
+        @extend .position-absolute;
+    }
+    .sk-bottom-nav {
+        // > debug color
+        background-color: deeppink;
+        @extend .overflow-hidden;
+        @extend .position-absolute;
+    }
 
-          @extend .overflow-auto;
-          @extend .position-absolute;
+    // > set positions and visibility
+    .sk-left-nav[data-sk-align="default"] {
+        // > content=left=navWith; leftNav=left=0
+        @include createPositions(left, default, -$core-left-nav-width);
+    }
+    .sk-left-nav[data-sk-align="left"] {
+        // > content=left=0; leftNav=left=-(navWith)
+        @include createPositions(left, left, -$core-left-nav-width);
+    }
+    .sk-left-nav[data-sk-align="back"] {
+	    // > content=left=0; leftNav=left=0
+	    @include createPositions(left, back, -$core-left-nav-width);
+    }
+    .sk-right-nav[data-sk-align="default"] {
+	    // > content=right=navwith
+	    @include createPositions(right, default, -$core-left-nav-width);
+    }
+    .sk-right-nav[data-sk-align="right"] {
+	    // > content=right=0
+	    @include createPositions(right, right, -$core-left-nav-width);
+    }
+    .sk-right-nav[data-sk-align="back"] {
+	    // > content=right=0
+	    @include createPositions(right, back, -$core-left-nav-width);
+    }
 
-      }
-      .sk-right-nav {
+    .sk-top-nav[data-sk-align="default"] {}
+    .sk-top-nav[data-sk-align="top"] {}
+    .sk-top-nav[data-sk-align="back"] {}
 
-      }
-      .sk-top-nav {
+    .sk-bottom-nav[data-sk-align="default"] {}
+    .sk-bottom-nav[data-sk-align="bottom"] {}
+    .sk-bottom-nav[data-sk-align="back"] {}
 
-      }
-      .sk-bottom-nav {
+    .sk-content {
+        left   : getHorizontalPosition();
+	    right  : getHorizontalPosition();
+        top    : getVerticalPosition();
+        bottom : getVerticalPosition();
+    }
 
-      }
-      // set positions and visibility
-      .sk-left-nav[data-sk-align="default"]{}
-      .sk-left-nav[data-sk-align="left"] {}
-      .sk-left-nav[data-sk-align="back"] {}
-      .sk-left-nav[data-sk-align="right"] {}
+    $aligns:( left, right, top, bottom );
 
-      .sk-right-nav[data-sk-align="default"]{}
-      .sk-right-nav[data-sk-align="left"] {}
-      .sk-right-nav[data-sk-align="back"] {}
-      .sk-right-nav[data-sk-align="right"] {}
+    @each $media in  280 350, 351 480px, 481 950px, 951px 1200px {
 
-      .sk-top-nav[data-sk-align="default"]{}
-      .sk-top-nav[data-sk-align="top"] {}
-      .sk-top-nav[data-sk-align="back"] {}
-      .sk-top-nav[data-sk-align="bottom"] {}
+        $min : nth($media, 1);
+        $max : nth($media, 2);
 
-      .sk-bottom-nav[data-sk-align="default"]{}
-      .sk-bottom-nav[data-sk-align="top"] {}
-      .sk-bottom-nav[data-sk-align="back"] {}
-      .sk-bottom-nav[data-sk-align="bottom"] {}
+        @media (min-width: $min) and (max-width: $max) {
 
-      @each $media in  450px 950px, 951px 1200px {
-
-          $min : nth($media, 1);
-          $max : nth($media, 2);
-
-          @media (min-width: $min) and (max-width: $max) {
-
-              @each $nav in left, right{
-                  @each $align in default, left, back, right {
-                      .sk-#{$nav}-nav[data-sk-align="#{$align}"] {
-                          @if $nav == left {
-                              @if $align == default {}
-                              @if $align == left {}
-                              @if $align == back {}
-                              @if $align == right {}
-                          }
-                          @if $nav == right {
-                              @if $align == default {}
-                              @if $align == left {}
-                              @if $align == back {}
-                              @if $align == right {}
-                          }
-
-                          background-color: blue;
-                      }
-                  }
-              }
-
-              @each $nav in top, bottom{
-                  @each $align in default, top, back, bottom {
-                      .sk-#{$nav}-nav[data-sk-align="#{$align}"] {
-                          @if $nav == top {
-                              @if $align == default {}
-                              @if $align == left {}
-                              @if $align == back {}
-                              @if $align == right {}
-                          }
-                          @if $nav == bottom {
-                              @if $align == default {}
-                              @if $align == left {}
-                              @if $align == back {}
-                              @if $align == right {}
-                          }
-                      }
-                  }
-              }
-          }
-      }
+            @each $nav in $aligns {
+                @each $align in default, back, $nav {
+                    .sk-#{$nav}-nav[data-sk-align="#{$align}"] {
+                        @if $nav == left {
+                            @if $align == default {}
+                            @if $align == left {}
+                            @if $align == back {}
+                        }
+                        @if $nav == right {
+                            @if $align == default {}
+                            @if $align == right {}
+                            @if $align == back {}
+                        }
+                        @if $nav == top {
+                            @if $align == default {}
+                            @if $align == top {}
+                            @if $align == back {}
+                        }
+                        @if $nav == bottom {
+                            @if $align == default {}
+                            @if $align == bottom {}
+                            @if $align == back {}
+                        }
+                        background-color: blue;
+                    }
+                }
+            }
+        }
+    }
 }
 
 
