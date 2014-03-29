@@ -1,6 +1,6 @@
 {
     "name": "skeleton-bitcollage",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "homepage": "https://github.com/SerkanSipahi/skeleton",
     "authors": [
         "Serkan Sipahi <serkan.sipahi@yahoo.de>"
@@ -9,10 +9,10 @@
     "devDependencies": {
         "requirejs": "~2.1.11",
         "backbone": "~1.1.2",
-        "underscore": "~1.6.0"
+        "underscore": "~1.6.0",
+        "domready" : "0.3.0"
     },
     "dependencies" : {
-        "classy-bitcollage" : "~0.6.1",
         "bootstrap-sass-official" : "~3.1.1"
     },
     "keywords": [

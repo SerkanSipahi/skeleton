@@ -1,5 +1,11 @@
 /* Skeleton */
 
+/*
+ * Dont be afraid about the generated css ( skeleton.css ) code !
+ * Addyosmanis grunt uncss ( https://github.com/addyosmani/grunt-uncss )
+ * remove, based on index.html, unused css ;)
+ */
+
 .overflow-hidden   { overflow : hidden; }
 .overflow-auto     { overflow : auto;  }
 .position-relative { position : relative ; }
@@ -10,28 +16,14 @@ body, html {
   height : 100%;
 }
 
-$core-content-position : 0;
-@mixin createPositions($position, $align, $width) {
-    #{$position} : $width;
-	@if $align != default {
-		$core-content-position : abs($width) !global;
-	} @else {
-		$core-content-position : 0 !global;
-	}
-}
-
-@function getHorizontalPosition() {
-	@return $core-content-position;
-}
-@function getVerticalPosition() {
-	@return 999;
-}
-
 $core-main-wrapper-width     : 1200px !default;
 $core-left-nav-width         :  300px !default;
 $core-right-nav-width        :  300px !default;
 $core-top-nav-height         :   50px !default;
 $core-bottom-nav-height      :  100px !default;
+$core-gutter                 :   10px !default;
+
+$core-first-breakpoint       : 1024px !default;
 
 #skeleton {
 
@@ -47,61 +39,113 @@ $core-bottom-nav-height      :  100px !default;
     min-height : 100%;
 
     // > common atrributes
+	.sk-left-nav {
+		background-color: green;
+		@extend .overflow-auto;
+		@extend .position-absolute;
+		z-index : 0;
+		width   : $core-left-nav-width;
+		top     : if($core-top-nav-height != 0px, $core-top-nav-height, 0);
+		bottom  : if($core-bottom-nav-height != 0px, $core-bottom-nav-height, 0);
+	}
+	.sk-right-nav {
+		background-color: yellow;
+		@extend .overflow-auto;
+		@extend .position-absolute;
+		z-index : 0;
+		width   : $core-right-nav-width;
+		top     : if($core-top-nav-height != 0px, $core-top-nav-height, 0);
+		bottom  : if($core-bottom-nav-height != 0px, $core-bottom-nav-height, 0);;
+	}
     .sk-top-nav {
-        // > debug color
         background-color: red;
         @extend .overflow-hidden;
         @extend .position-absolute;
-    }
-    .sk-left-nav {
-        // > debug color
-        background-color: green;
-        @extend .overflow-auto;
-        @extend .position-absolute;
-    }
-    .sk-content {
-        // > debug color
-        background-color: blue;
-        @extend .overflow-auto;
-        @extend .position-absolute;
-    }
-    .sk-right-nav {
-        // > debug color
-        background-color: yellow;
-        @extend .overflow-auto;
-        @extend .position-absolute;
+	    z-index : 0;
+	    width   : $core-top-nav-height;
+	    left    : 0;
+	    right   : 0;
     }
     .sk-bottom-nav {
-        // > debug color
         background-color: deeppink;
         @extend .overflow-hidden;
         @extend .position-absolute;
+	    z-index : 0;
+	    width   : $core-bottom-nav-height;
+	    left    : 0;
+	    right   : 0;
     }
+	// > content area
+	.sk-content {
+		background-color: blue;
+		@extend .overflow-auto;
+		@extend .position-absolute;
+		z-index : 1;
+		top     : if($core-top-nav-height != 0px, $core-top-nav-height, 0);
+		bottom  : if($core-bottom-nav-height != 0px, $core-bottom-nav-height, 0);;
+	}
 
-    // > set positions and visibility
+	@mixin createPositions($position, $align, $width) {
+
+		// > set position of .sk-#{$position}-nav[data-sk-align="#{$align}"]
+		// > e.g. with sk-left-nav[data-sk-align="*"]
+		//   .sk-left-nav[data-sk-align="default"] { $position : 0 }
+		//   .sk-left-nav[data-sk-align="static"]  { $position : 0  }
+		//   .sk-left-nav[data-sk-align="left"]    { $position : -$width }
+		//   .sk-left-nav[data-sk-align="back"]    { $position : 0  }
+		@if($align != default and $align != static and $align != back){
+			#{$position} : $width * -1;
+		} @else {
+			#{$position} : 0;
+		}
+
+		// > set position of .sk-content[data-sk-#{$position}-opt="#{$align}"]
+		// > e.g. with sk-content[data-sk-left-top="*"]
+		//   .sk-content[data-sk-left-opt="default"] { #{$position} : $width; }
+		//   .sk-content[data-sk-left-opt="static"]  { #{$position} : $width;  }
+		//   .sk-content[data-sk-left-opt="left"]    { #{$position} : 0;  }
+		//   .sk-content[data-sk-left-opt="back"]    { #{$position} : 0; }
+		@at-root {
+			.sk-content[data-sk-#{$position}-opt="#{$align}"] {
+				@if($align != default and $align != static){
+					#{$position} : 0;
+				} @else {
+					#{$position} : $width;
+				}
+			}
+		}
+	}
+
+	/*
+	 * Desktop settings
+	 */
+
+	// > sk-left-nav
     .sk-left-nav[data-sk-align="default"] {
-        // > content=left=navWith; leftNav=left=0
-        @include createPositions(left, default, -$core-left-nav-width);
+        @include createPositions(left, default, $core-left-nav-width);
     }
+	.sk-left-nav[data-sk-align="static"] {
+		@include createPositions(left, static, $core-left-nav-width);
+	}
     .sk-left-nav[data-sk-align="left"] {
-        // > content=left=0; leftNav=left=-(navWith)
-        @include createPositions(left, left, -$core-left-nav-width);
+        @include createPositions(left, left, $core-left-nav-width);
     }
     .sk-left-nav[data-sk-align="back"] {
-	    // > content=left=0; leftNav=left=0
-	    @include createPositions(left, back, -$core-left-nav-width);
+	    @include createPositions(left, back, $core-left-nav-width);
     }
+
+	// > sk-right-nav
     .sk-right-nav[data-sk-align="default"] {
-	    // > content=right=navwith
-	    @include createPositions(right, default, -$core-left-nav-width);
+	    @include createPositions(right, default, $core-left-nav-width);
     }
+	.sk-right-nav[data-sk-align="static"] {
+		@include createPositions(right, static, $core-left-nav-width);
+	}
     .sk-right-nav[data-sk-align="right"] {
-	    // > content=right=0
-	    @include createPositions(right, right, -$core-left-nav-width);
+	    @include createPositions(right, right, $core-left-nav-width);
     }
     .sk-right-nav[data-sk-align="back"] {
-	    // > content=right=0
-	    @include createPositions(right, back, -$core-left-nav-width);
+	    @include createPositions(right, back, $core-left-nav-width);
     }
 
     .sk-top-nav[data-sk-align="default"] {}
@@ -112,19 +156,16 @@ $core-bottom-nav-height      :  100px !default;
     .sk-bottom-nav[data-sk-align="bottom"] {}
     .sk-bottom-nav[data-sk-align="back"] {}
 
-    .sk-content {
-        left   : getHorizontalPosition();
-	    right  : getHorizontalPosition();
-        top    : getVerticalPosition();
-        bottom : getVerticalPosition();
-    }
+	/*
+	 * Tablet/Mobile settings
+	 */
 
     $aligns:( left, right, top, bottom );
+	//key=min, value=max
+	$breakpoints : ( 1024px : 951px, 950px : 481px, 480px : 351px, 350px : 280px);
 
-    @each $media in  280 350, 351 480px, 481 950px, 951px 1200px {
-
-        $min : nth($media, 1);
-        $max : nth($media, 2);
+	// > from the first breakpoint will all sk-contents to 0px;
+    @each $max, $min in $breakpoints {
 
         @media (min-width: $min) and (max-width: $max) {
 
@@ -151,7 +192,7 @@ $core-bottom-nav-height      :  100px !default;
                             @if $align == bottom {}
                             @if $align == back {}
                         }
-                        background-color: blue;
+                        background-color: red;
                     }
                 }
             }

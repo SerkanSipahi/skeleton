@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         concat: {
             classy: {
                 files: {
-                    'vendor/js/classy.js': 'bower_components/classy-bitcollage/classy.js'
+                    'vendor/js/ready.js': 'bower_components/domready/ready.js'
                 }
             }
         },
@@ -52,6 +52,9 @@ module.exports = function(grunt) {
                 files: {
                     'skeleton.css': 'scss/styles.scss'
                 }
+            },
+            options: {
+                style: 'expanded'
             }
         },
         clean : {

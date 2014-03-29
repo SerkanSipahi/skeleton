@@ -3,50 +3,35 @@
 <head>
     <title>Skeleton</title>
     <link rel="stylesheet" href="skeleton.css" />
+    <script src="vendor/js/ready.js"></script>
+    <script src="skeleton.js"></script>
+    <script>
+        domready(function () {
+            var skeleton = new Skeleton('#skeleton');
+        })
+    </script>
 </head>
 <body>
     <div id="skeleton">
-
-        <!-- **************************************
-        // > start: core main menus
-        // @ the sequence of navs does not matter
-
-        Possible Attributes
-        ==========================
-        @data-sk-align
-            default
-            left
-            right
-            back
-            top
-            bottom
-
-        *************************************** -->
-
+        <!--
         <div data-sk-align="top" class="sk-top-nav">
             =top=
         </div>
-        <div data-sk-align="left" class="sk-left-nav">
+        -->
+        <div class="sk-left-nav" data-sk-align="default">
             =left=
         </div>
-        <div
-            data-sk-top-opt="top"
-            data-sk-left-opt="left"
-            data-sk-right-opt="back"
-            data-sk-bottom-opt="back"
-            class="skeleton-content">
+        <div class="sk-content">
             =content=
         </div>
-        <div data-sk-align="back" class="sk-right-nav">
+        <div class="sk-right-nav" data-sk-align="back">
             =right=
         </div>
+        <!--
         <div data-sk-align="back" class="sk-bottom-nav">
             =back=
         </div>
-
-        <!-- ****************************
-        // > start: core main menus
-        ****************************** -->
+        -->
     </div>
 </body>
 </html>
