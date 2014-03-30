@@ -39,11 +39,16 @@ $core-first-breakpoint       : 1024px !default;
     min-height : 100%;
 
     // > common atrributes
+	// > Here some Infors to Attributes
+	//   z-index
+	//   ============
+	//   
+
 	.sk-left-nav {
 		background-color: green;
 		@extend .overflow-auto;
 		@extend .position-absolute;
-		z-index : 0;
+		z-index : 1;
 		width   : $core-left-nav-width;
 		top     : if($core-top-nav-height != 0px, $core-top-nav-height, 0);
 		bottom  : if($core-bottom-nav-height != 0px, $core-bottom-nav-height, 0);
@@ -52,7 +57,7 @@ $core-first-breakpoint       : 1024px !default;
 		background-color: yellow;
 		@extend .overflow-auto;
 		@extend .position-absolute;
-		z-index : 0;
+		z-index : 1;
 		width   : $core-right-nav-width;
 		top     : if($core-top-nav-height != 0px, $core-top-nav-height, 0);
 		bottom  : if($core-bottom-nav-height != 0px, $core-bottom-nav-height, 0);;
@@ -80,7 +85,7 @@ $core-first-breakpoint       : 1024px !default;
 		background-color: blue;
 		@extend .overflow-auto;
 		@extend .position-absolute;
-		z-index : 1;
+		z-index : 2;
 		top     : if($core-top-nav-height != 0px, $core-top-nav-height, 0);
 		bottom  : if($core-bottom-nav-height != 0px, $core-bottom-nav-height, 0);;
 	}
@@ -132,19 +137,25 @@ $core-first-breakpoint       : 1024px !default;
 		//   linke/rechte navi auch eine data-opt Einstellung
 		//
 		//
+		@if(( $align == top or $align == back or $align == bottom ) and
+			( $position == top or $position == bottom )){
 
-		// > leftnav
-		@if($position==left){
+			// .sk-left-nav[data-sk-top-opt="top"]    {  }
+			// .sk-left-nav[data-sk-top-opt="back"]   {  }
+			// .sk-left-nav[data-sk-top-opt="bottom"] {  }
+
+			// .sk-left-nav[data-sk-bottom-opt="top"]    {  }
+			// .sk-left-nav[data-sk-bottom-opt="back"]   {  }
+			// .sk-left-nav[data-sk-bottom-opt="bottom"] {  }
+
 			@at-root {
-
+				@each $navAlign in left right {
+					#skeleton .sk-#{$navAlign}-nav[data-sk-#{$position}-opt="#{$align}"] {
+						#{$position} : 0;
+					}
+				}
 			}
-		}
 
-		// > rightnav
-		@if($position==right){
-			@at-root {
-
-			}
 		}
 
 	}
