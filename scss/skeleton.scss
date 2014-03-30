@@ -62,7 +62,7 @@ $core-first-breakpoint       : 1024px !default;
         @extend .overflow-hidden;
         @extend .position-absolute;
 	    z-index : 0;
-	    width   : $core-top-nav-height;
+	    height  : $core-top-nav-height;
 	    left    : 0;
 	    right   : 0;
     }
@@ -71,7 +71,7 @@ $core-first-breakpoint       : 1024px !default;
         @extend .overflow-hidden;
         @extend .position-absolute;
 	    z-index : 0;
-	    width   : $core-bottom-nav-height;
+	    height  : $core-bottom-nav-height;
 	    left    : 0;
 	    right   : 0;
     }
@@ -89,10 +89,19 @@ $core-first-breakpoint       : 1024px !default;
 
 		// > set position of .sk-#{$position}-nav[data-sk-align="#{$align}"]
 		// > e.g. with sk-left-nav[data-sk-align="*"]
-		//   .sk-left-nav[data-sk-align="default"] { $position : 0 }
-		//   .sk-left-nav[data-sk-align="static"]  { $position : 0  }
-		//   .sk-left-nav[data-sk-align="left"]    { $position : -$width }
-		//   .sk-left-nav[data-sk-align="back"]    { $position : 0  }
+		//   .sk-left-nav[data-sk-align="default"] { $position(left) : 0 }
+		//   .sk-left-nav[data-sk-align="static"]  { $position(left) : 0  }
+		//   .sk-left-nav[data-sk-align="left"]    { $position(left) : -$width(300) }
+		//   .sk-left-nav[data-sk-align="back"]    { $position(left) : 0  }
+
+		//   or
+
+		//   .sk-top-nav[data-sk-align="default"] { $position(top) : 0 }
+		//   .sk-top-nav[data-sk-align="static"]  { $position(top) : 0  }
+		//   .sk-top-nav[data-sk-align="top"]     { $position(top) : -$width(50) }
+		//   .sk-top-nav[data-sk-align="back"]    { $position(top) : 0  }
+
+		//only excepted values: left, right, top, bottom
 		@if($align != default and $align != static and $align != back){
 			#{$position} : $width * -1;
 		} @else {
@@ -101,12 +110,13 @@ $core-first-breakpoint       : 1024px !default;
 
 		// > set position of .sk-content[data-sk-#{$position}-opt="#{$align}"]
 		// > e.g. with sk-content[data-sk-left-top="*"]
-		//   .sk-content[data-sk-left-opt="default"] { #{$position} : $width; }
-		//   .sk-content[data-sk-left-opt="static"]  { #{$position} : $width;  }
-		//   .sk-content[data-sk-left-opt="left"]    { #{$position} : 0;  }
-		//   .sk-content[data-sk-left-opt="back"]    { #{$position} : 0; }
+		//   .sk-content[data-sk-left-opt="default"] { $position : $width; }
+		//   .sk-content[data-sk-left-opt="static"]  { $position : $width;  }
+		//   .sk-content[data-sk-left-opt="left"]    { $position : 0;  }
+		//   .sk-content[data-sk-left-opt="back"]    { $position : 0; }
+
 		@at-root {
-			.sk-content[data-sk-#{$position}-opt="#{$align}"] {
+			#skeleton .sk-content[data-sk-#{$position}-opt="#{$align}"] {
 				@if($align != default and $align != static){
 					#{$position} : 0;
 				} @else {
@@ -114,6 +124,29 @@ $core-first-breakpoint       : 1024px !default;
 				}
 			}
 		}
+
+		// > css fuer linke und rechte navi wenn
+		//   top=back, top oder bottom=back, bottom ist!
+		//
+		//   bei top=back,top und bottom=back,bottom erhaelt
+		//   linke/rechte navi auch eine data-opt Einstellung
+		//
+		//
+
+		// > leftnav
+		@if($position==left){
+			@at-root {
+
+			}
+		}
+
+		// > rightnav
+		@if($position==right){
+			@at-root {
+
+			}
+		}
+
 	}
 
 	/*
@@ -136,25 +169,45 @@ $core-first-breakpoint       : 1024px !default;
 
 	// > sk-right-nav
     .sk-right-nav[data-sk-align="default"] {
-	    @include createPositions(right, default, $core-left-nav-width);
+	    @include createPositions(right, default, $core-right-nav-width);
     }
 	.sk-right-nav[data-sk-align="static"] {
-		@include createPositions(right, static, $core-left-nav-width);
+		@include createPositions(right, static, $core-right-nav-width);
 	}
     .sk-right-nav[data-sk-align="right"] {
-	    @include createPositions(right, right, $core-left-nav-width);
+	    @include createPositions(right, right, $core-right-nav-width);
     }
     .sk-right-nav[data-sk-align="back"] {
-	    @include createPositions(right, back, $core-left-nav-width);
+	    @include createPositions(right, back, $core-right-nav-width);
     }
 
-    .sk-top-nav[data-sk-align="default"] {}
-    .sk-top-nav[data-sk-align="top"] {}
-    .sk-top-nav[data-sk-align="back"] {}
+	// > sk-top-nav
+    .sk-top-nav[data-sk-align="default"] {
+	    @include createPositions(top, default, $core-top-nav-height);
+    }
+	.sk-top-nav[data-sk-align="static"] {
+		@include createPositions(top, static, $core-top-nav-height);
+	}
+    .sk-top-nav[data-sk-align="top"] {
+	    @include createPositions(top, top, $core-top-nav-height);
+    }
+    .sk-top-nav[data-sk-align="back"] {
+	    @include createPositions(top, back, $core-top-nav-height);
+    }
 
-    .sk-bottom-nav[data-sk-align="default"] {}
-    .sk-bottom-nav[data-sk-align="bottom"] {}
-    .sk-bottom-nav[data-sk-align="back"] {}
+	// > sk-bottom-nav
+    .sk-bottom-nav[data-sk-align="default"] {
+	    @include createPositions(bottom, default, $core-bottom-nav-height);
+    }
+	.sk-bottom-nav[data-sk-align="static"] {
+		@include createPositions(bottom, static, $core-bottom-nav-height);
+	}
+    .sk-bottom-nav[data-sk-align="bottom"] {
+	    @include createPositions(bottom, bottom, $core-bottom-nav-height);
+    }
+    .sk-bottom-nav[data-sk-align="back"] {
+	    @include createPositions(bottom, back, $core-bottom-nav-height);
+    }
 
 	/*
 	 * Tablet/Mobile settings
@@ -165,6 +218,7 @@ $core-first-breakpoint       : 1024px !default;
 	$breakpoints : ( 1024px : 951px, 950px : 481px, 480px : 351px, 350px : 280px);
 
 	// > from the first breakpoint will all sk-contents to 0px;
+	// > static is always visible
     @each $max, $min in $breakpoints {
 
         @media (min-width: $min) and (max-width: $max) {
@@ -199,5 +253,3 @@ $core-first-breakpoint       : 1024px !default;
         }
     }
 }
-
-

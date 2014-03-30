@@ -7,17 +7,15 @@
     <script src="skeleton.js"></script>
     <script>
         domready(function () {
-            var skeleton = new Skeleton('#skeleton');
+            var skeleton = new Skeleton();
         })
     </script>
 </head>
 <body>
     <div id="skeleton">
-        <!--
-        <div data-sk-align="top" class="sk-top-nav">
+        <div class="sk-top-nav" data-sk-align="default">
             =top=
         </div>
-        -->
         <div class="sk-left-nav" data-sk-align="default">
             =left=
         </div>
@@ -27,11 +25,9 @@
         <div class="sk-right-nav" data-sk-align="back">
             =right=
         </div>
-        <!--
-        <div data-sk-align="back" class="sk-bottom-nav">
+        <div class="sk-bottom-nav" data-sk-align="default">
             =back=
         </div>
-        -->
     </div>
 </body>
 </html>

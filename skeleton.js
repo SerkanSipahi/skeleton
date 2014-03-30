@@ -9,7 +9,8 @@ var Skeleton = (function(document, window, undefined){
     };
 
     // > private properties
-    var _$                 = null,
+    var _pluginPath        = '#skeleton',
+        _$                 = null,
         _version           = '0.0.5',
         _public            = {},
         _namespaceAlias    = 'sk',
@@ -22,9 +23,9 @@ var Skeleton = (function(document, window, undefined){
             _$ = document.querySelectorAll.bind(document);
         } else {
             // > simulate querySelectorAll for ie7, ie8
-            var s = d.createStyleSheet();
-            d.querySelectorAll = function(r, c, i, j, a) {
-                a=d.all, c=[], r = r.replace(/\[for\b/gi, '[htmlFor').split(',');
+            var s = document.createStyleSheet();
+            document.querySelectorAll = function(r, c, i, j, a) {
+                a=document.all, c=[], r = r.replace(/\[for\b/gi, '[htmlFor').split(',');
                 for (i=r.length; i--;) {
                     s.addRule(r[i], 'k:v');
                     for (j=a.length; j--;) { a[j].currentStyle.k && c.push(a[j]); }
@@ -55,10 +56,10 @@ var Skeleton = (function(document, window, undefined){
     };
 
     // > constructor
-    function Skeleton(element){
+    function Skeleton(){
         // > internals
         _public = this;
-        this.element = element+' ';
+        this.element = _pluginPath+' ';
         _initQuerySelector();
 
         // > check if element exists etc
@@ -86,23 +87,21 @@ var Skeleton = (function(document, window, undefined){
          **/
         createContentDatasets : function(){
 
-            var skNavs    = _$(this.element+'[data-'+_namespaceAlias+'-align]'),
-                skContent = _$(this.element+' .'+_namespaceAlias+'-content'),
-                attributes, pattern = new RegExp('data-'+_namespaceAlias+'-align'),
-                attributeName, navName, skOptValue;
+            var skNavs     = _$(this.element+'[data-'+_namespaceAlias+'-align]'),
+                skContent  = _$(this.element+' .'+_namespaceAlias+'-content'),
+                skLeft     = _$(this.element+' .'+_namespaceAlias+'-left-nav'),
+                skRight    = _$(this.element+' .'+_namespaceAlias+'-right-nav'),
+                navName    = null,
+                skOptValue = null;
 
             // > refactor this later e.g. helper methods Element.prototpye.attr()..
             for(var i= 0, outerLength=skNavs.length;i<outerLength;i++){
-                attributes = skNavs[i].attributes;
-                for(var f= 0, innerLength=attributes.length;f<innerLength;f++){
-                    if(!pattern.test(attributes[f].name)) { continue; }
-                        navName = /sk-(.*)-nav/.exec(skNavs[i].className)[1];
-                        skOptValue = attributes[f].value;
-                        skContent[0].setAttribute(
-                            'data-'+_namespaceAlias+'-'+navName+'-opt',
-                            skOptValue
-                        );
-                }
+                skOptValue = skNavs[i].getAttribute('data-'+_namespaceAlias+'-align');
+                navName = /sk-(.*)-nav/.exec(skNavs[i].className)[1];
+                skContent[0].setAttribute(
+                    'data-'+_namespaceAlias+'-'+navName+'-opt',
+                    skOptValue
+                );
             }
 
         },
