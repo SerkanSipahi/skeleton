@@ -77,13 +77,7 @@ var Skeleton = (function(document, window, undefined){
     Skeleton.prototype = {
 
         /*
-         * > this function build something like that
-         *   and add to to .${_namespaceAlias}-content
-         * *******************************************
-         * data-sk-top-opt="top"
-         * data-sk-left-opt="default"
-         * data-sk-right-opt="back"
-         * data-sk-bottom-opt="back"
+         * @todo: Documentation
          **/
         createContentDatasets : function(){
 
@@ -91,10 +85,11 @@ var Skeleton = (function(document, window, undefined){
                 skContent  = _$(this.element+' .'+_namespaceAlias+'-content'),
                 skLeft     = _$(this.element+' .'+_namespaceAlias+'-left-nav'),
                 skRight    = _$(this.element+' .'+_namespaceAlias+'-right-nav'),
+                skTop      = _$(this.element+' .'+_namespaceAlias+'-top-nav'),
+                skBottom   = _$(this.element+' .'+_namespaceAlias+'-bottom-nav'),
                 navName    = null,
                 skOptValue = null;
 
-            // > refactor this later e.g. helper methods Element.prototpye.attr()..
             for(var i= 0, outerLength=skNavs.length;i<outerLength;i++){
                 skOptValue = skNavs[i].getAttribute('data-'+_namespaceAlias+'-align');
                 navName = /sk-(.*)-nav/.exec(skNavs[i].className)[1];
@@ -102,6 +97,28 @@ var Skeleton = (function(document, window, undefined){
                     'data-'+_namespaceAlias+'-'+navName+'-opt',
                     skOptValue
                 );
+            }
+
+            // > e.g. for left
+            // if top or bottom has top/back/bottom on align
+            // we add left and right navi this(see below) attributes
+
+            // .sk-left-nav[data-sk-top-opt="top"]    { top : 0; }
+            // .sk-left-nav[data-sk-top-opt="back"]   { top : 0; }
+            // .sk-left-nav[data-sk-top-opt="bottom"] { top : 0; }
+
+            var res       = null,
+                element   = null,
+                container = [[skTop[0]||[],'top'], [skBottom[0]||[],'bottom']];
+
+            if(skTop.length || skBottom.length){
+                for(var x=0,length=container.length;x<length;x++){
+                    res = container[x][0].getAttribute('data-'+_namespaceAlias+'-align');
+                    if(/top|back|bottom/.test(res)){
+                        skLeft[0].setAttribute('data-'+_namespaceAlias+'-'+container[x][1]+'-opt', res);
+                        skRight[0].setAttribute('data-'+_namespaceAlias+'-'+container[x][1]+'-opt', res);
+                    }
+                }
             }
 
         },

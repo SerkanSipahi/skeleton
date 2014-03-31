@@ -42,7 +42,7 @@ $core-first-breakpoint       : 1024px !default;
 	// > Here some Infors to Attributes
 	//   z-index
 	//   ============
-	//   
+	//
 
 	.sk-left-nav {
 		background-color: green;
@@ -133,20 +133,17 @@ $core-first-breakpoint       : 1024px !default;
 		// > css fuer linke und rechte navi wenn
 		//   top=back, top oder bottom=back, bottom ist!
 		//
-		//   bei top=back,top und bottom=back,bottom erhaelt
-		//   linke/rechte navi auch eine data-opt Einstellung
-		//
 		//
 		@if(( $align == top or $align == back or $align == bottom ) and
 			( $position == top or $position == bottom )){
 
-			// .sk-left-nav[data-sk-top-opt="top"]    {  }
-			// .sk-left-nav[data-sk-top-opt="back"]   {  }
-			// .sk-left-nav[data-sk-top-opt="bottom"] {  }
+			// .sk-left-nav[data-sk-top-opt="top"]    { top : 0; }
+			// .sk-left-nav[data-sk-top-opt="back"]   { top : 0; }
+			// .sk-left-nav[data-sk-top-opt="bottom"] { top : 0; }
 
-			// .sk-left-nav[data-sk-bottom-opt="top"]    {  }
-			// .sk-left-nav[data-sk-bottom-opt="back"]   {  }
-			// .sk-left-nav[data-sk-bottom-opt="bottom"] {  }
+			// .sk-left-nav[data-sk-bottom-opt="top"]    { bottom : 0; }
+			// .sk-left-nav[data-sk-bottom-opt="back"]   { bottom : 0; }
+			// .sk-left-nav[data-sk-bottom-opt="bottom"] { bottom : 0; }
 
 			@at-root {
 				@each $navAlign in left right {
