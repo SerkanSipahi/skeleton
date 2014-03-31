@@ -39,10 +39,6 @@ $core-first-breakpoint       : 1024px !default;
     min-height : 100%;
 
     // > common atrributes
-	// > Here some Infors to Attributes
-	//   z-index
-	//   ============
-	//
 
 	.sk-left-nav {
 		background-color: green;
@@ -86,6 +82,11 @@ $core-first-breakpoint       : 1024px !default;
 		@extend .overflow-auto;
 		@extend .position-absolute;
 		z-index : 2;
+		// > if we havent left or right nav in dom,
+		//   this will be the default value of sk-content
+		left    : 0;
+		right   : 0;
+		///////////////////////////////////////////
 		top     : if($core-top-nav-height != 0px, $core-top-nav-height, 0);
 		bottom  : if($core-bottom-nav-height != 0px, $core-bottom-nav-height, 0);;
 	}
@@ -123,9 +124,9 @@ $core-first-breakpoint       : 1024px !default;
 		@at-root {
 			#skeleton .sk-content[data-sk-#{$position}-opt="#{$align}"] {
 				@if($align != default and $align != static){
-					#{$position} : 0;
+					#{$position} : 0 !important;
 				} @else {
-					#{$position} : $width;
+					#{$position} : $width !important;
 				}
 			}
 		}
