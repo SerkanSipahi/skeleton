@@ -124,7 +124,7 @@ $core-first-breakpoint       : 1024px !default;
 		@at-root {
 			#skeleton .sk-content[data-sk-#{$position}-opt="#{$align}"] {
 				@if($align != default and $align != static){
-					#{$position} : 0 !important;
+					#{$position} : 0;
 				} @else {
 					#{$position} : $width !important;
 				}

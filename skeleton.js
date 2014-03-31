@@ -78,6 +78,7 @@ var Skeleton = (function(document, window, undefined){
 
         /*
          * @todo: Documentation
+         * @todo: move this method to privates
          **/
         createContentDatasets : function(){
 
@@ -113,6 +114,8 @@ var Skeleton = (function(document, window, undefined){
 
             if(skTop.length || skBottom.length){
                 for(var x=0,length=container.length;x<length;x++){
+                    // > if we havent top or bottom nav, continue;
+                    if(container[x][0].length===0) { continue; }
                     res = container[x][0].getAttribute('data-'+_namespaceAlias+'-align');
                     if(/top|back|bottom/.test(res)){
                         skLeft[0].setAttribute('data-'+_namespaceAlias+'-'+container[x][1]+'-opt', res);
