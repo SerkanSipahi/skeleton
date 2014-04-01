@@ -105,7 +105,7 @@ var Skeleton = (function(document, window, undefined){
 
             // *** relatedTo->(1) skeleton.scss ***
             // > e.g. for left
-            // if top or bottom has top/back/bottom on align
+            // if top or bottom has top/back/front/bottom on align
             // we add left and right navi this(see below) attributes
 
             // .sk-left-nav[data-sk-top-opt="top"]    { top : 0; }
