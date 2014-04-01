@@ -91,6 +91,9 @@ var Skeleton = (function(document, window, undefined){
                 navName    = null,
                 skOptValue = null;
 
+
+            // > get all(left,right,top,bottom) algin settings and
+            // add them sk-content e.g. data-sk-top-opt="back"
             for(var i= 0, outerLength=skNavs.length;i<outerLength;i++){
                 skOptValue = skNavs[i].getAttribute('data-'+_namespaceAlias+'-align');
                 navName = /sk-(.*)-nav/.exec(skNavs[i].className)[1];
@@ -100,6 +103,7 @@ var Skeleton = (function(document, window, undefined){
                 );
             }
 
+            // *** relatedTo->(1) skeleton.scss ***
             // > e.g. for left
             // if top or bottom has top/back/bottom on align
             // we add left and right navi this(see below) attributes
@@ -116,8 +120,9 @@ var Skeleton = (function(document, window, undefined){
                 for(var x=0,length=container.length;x<length;x++){
                     // > if we havent top or bottom nav, continue;
                     if(container[x][0].length===0) { continue; }
+
                     res = container[x][0].getAttribute('data-'+_namespaceAlias+'-align');
-                    if(/top|back|bottom/.test(res)){
+                    if(/top|back|front|bottom/.test(res)){
                         skLeft[0].setAttribute('data-'+_namespaceAlias+'-'+container[x][1]+'-opt', res);
                         skRight[0].setAttribute('data-'+_namespaceAlias+'-'+container[x][1]+'-opt', res);
                     }

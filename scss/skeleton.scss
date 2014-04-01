@@ -93,63 +93,83 @@ $core-first-breakpoint       : 1024px !default;
 
 	@mixin createPositions($position, $align, $width) {
 
+		// > here the outer wall( navs--> left, right, top, bottom )
+		// =====================================================
 		// > set position of .sk-#{$position}-nav[data-sk-align="#{$align}"]
 		// > e.g. with sk-left-nav[data-sk-align="*"]
+
+		//   .sk-left-nav[data-sk-align="left"]  { $position(left)   : -$width(300) }
+		//   .sk-left-nav[data-sk-align="right"] { $position(right)  : -$width(300) }
+		//   .sk-left-nav[data-sk-align="top"]   { $position(top)    : -$width(50) }
+		//   .sk-left-nav[data-sk-align="bottom"]{ $position(bottom) : -$width(100) }
+		//   and only aligns --> left/right/top/bottom
+		//	 etc. sk-left/top/right/bottom
+
+		@if($align != default and $align != static and $align != back and $align != front){
+			#{$position} : $width * -1;
+
 		//   .sk-left-nav[data-sk-align="default"] { $position(left) : 0 }
 		//   .sk-left-nav[data-sk-align="static"]  { $position(left) : 0  }
-		//   .sk-left-nav[data-sk-align="left"]    { $position(left) : -$width(300) }
 		//   .sk-left-nav[data-sk-align="back"]    { $position(left) : 0  }
+		//   .sk-left-nav[data-sk-align="front"]   { $position(left) : 0  }
+		//   and only aligns --> default/static/back/front
+		//	 etc. sk-left/top/right/bottom
 
-		//   or
-
-		//   .sk-top-nav[data-sk-align="default"] { $position(top) : 0 }
-		//   .sk-top-nav[data-sk-align="static"]  { $position(top) : 0  }
-		//   .sk-top-nav[data-sk-align="top"]     { $position(top) : -$width(50) }
-		//   .sk-top-nav[data-sk-align="back"]    { $position(top) : 0  }
-
-		//only excepted values: left, right, top, bottom
-		@if($align != default and $align != static and $align != back){
-			#{$position} : $width * -1;
 		} @else {
 			#{$position} : 0;
 		}
 
+		// > **********************************************************************
+		// > **********************************************************************
+
+		// > here the inner wall( content )
+
 		// > set position of .sk-content[data-sk-#{$position}-opt="#{$align}"]
 		// > e.g. with sk-content[data-sk-left-top="*"]
 		//   .sk-content[data-sk-left-opt="default"] { $position : $width; }
-		//   .sk-content[data-sk-left-opt="static"]  { $position : $width;  }
-		//   .sk-content[data-sk-left-opt="left"]    { $position : 0;  }
+		//   .sk-content[data-sk-left-opt="static"]  { $position : $width; }
+		//   .sk-content[data-sk-left-opt="front"]   { $position : $width; }
+		//   .sk-content[data-sk-left-opt="left"]    { $position : 0; }
+		//   .sk-content[data-sk-left-opt="right"]   { $position : 0; }
 		//   .sk-content[data-sk-left-opt="back"]    { $position : 0; }
+		//   .sk-content[data-sk-left-opt="top"]     { $position : 0; }
+		//   .sk-content[data-sk-left-opt="bottom"]  { $position : 0; }
 
 		@at-root {
 			#skeleton .sk-content[data-sk-#{$position}-opt="#{$align}"] {
-				@if($align != default and $align != static){
+				@if($align != default and $align != static and $align != front){
 					#{$position} : 0;
 				} @else {
 					#{$position} : $width !important;
 				}
+
+				// > here: if frontend; z-index less than top or bottom
 			}
 		}
 
-		// > css fuer linke und rechte navi wenn
-		//   top=back, top oder bottom=back, bottom ist!
-		//
-		//
-		@if(( $align == top or $align == back or $align == bottom ) and
+		// *** relatedTo->(1) skeleton.js ***
+		// > css for left and right navi if
+		//   top=back,top or bottom=back,bottom
+
+		@if(( $align == top or $align == back or $align == bottom and $align == front ) and
 			( $position == top or $position == bottom )){
 
 			// .sk-left-nav[data-sk-top-opt="top"]    { top : 0; }
 			// .sk-left-nav[data-sk-top-opt="back"]   { top : 0; }
+			// .sk-left-nav[data-sk-top-opt="front"]  { top : 0; }
 			// .sk-left-nav[data-sk-top-opt="bottom"] { top : 0; }
 
 			// .sk-left-nav[data-sk-bottom-opt="top"]    { bottom : 0; }
 			// .sk-left-nav[data-sk-bottom-opt="back"]   { bottom : 0; }
+			// .sk-left-nav[data-sk-bottom-opt="front"]  { bottom : 0; }
 			// .sk-left-nav[data-sk-bottom-opt="bottom"] { bottom : 0; }
 
 			@at-root {
 				@each $navAlign in left right {
 					#skeleton .sk-#{$navAlign}-nav[data-sk-#{$position}-opt="#{$align}"] {
 						#{$position} : 0;
+
+						// > here: if frontend; z-index less than top or bottom
 					}
 				}
 			}
@@ -175,6 +195,9 @@ $core-first-breakpoint       : 1024px !default;
     .sk-left-nav[data-sk-align="back"] {
 	    @include createPositions(left, back, $core-left-nav-width);
     }
+	.sk-left-nav[data-sk-align="front"] {
+		//@include createPositions(left, front, $core-left-nav-width);
+	}
 
 	// > sk-right-nav
     .sk-right-nav[data-sk-align="default"] {
@@ -189,6 +212,9 @@ $core-first-breakpoint       : 1024px !default;
     .sk-right-nav[data-sk-align="back"] {
 	    @include createPositions(right, back, $core-right-nav-width);
     }
+	.sk-right-nav[data-sk-align="front"] {
+		//@include createPositions(right, front, $core-right-nav-width);
+	}
 
 	// > sk-top-nav
     .sk-top-nav[data-sk-align="default"] {
@@ -203,6 +229,9 @@ $core-first-breakpoint       : 1024px !default;
     .sk-top-nav[data-sk-align="back"] {
 	    @include createPositions(top, back, $core-top-nav-height);
     }
+	.sk-top-nav[data-sk-align="front"] {
+		//@include createPositions(top, front, $core-top-nav-height);
+	}
 
 	// > sk-bottom-nav
     .sk-bottom-nav[data-sk-align="default"] {
@@ -217,6 +246,9 @@ $core-first-breakpoint       : 1024px !default;
     .sk-bottom-nav[data-sk-align="back"] {
 	    @include createPositions(bottom, back, $core-bottom-nav-height);
     }
+	.sk-bottom-nav[data-sk-align="front"] {
+		//@include createPositions(bottom, front, $core-bottom-nav-height);
+	}
 
 	/*
 	 * Tablet/Mobile settings
