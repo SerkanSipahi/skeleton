@@ -7,32 +7,22 @@
     <script src="skeleton.js"></script>
     <script>
         domready(function () {
-            var skeleton = new Skeleton();
+            var skeleton = new Skeleton('#skeleton');
         })
     </script>
 </head>
 <body>
     <div id="skeleton">
-        <div class="sk-top-nav" data-sk-align="default">
+        <div class="sk-top-nav" data-sk-align="front" data-sk-float="left">
             =top=
         </div>
-        <!--
-        >> Es koennen mehrere div Varianten(left, back, etc)
-           einer einer Navigation angegeben werden
-        <div class="sk-top-nav" data-sk-align="left">
-            =top=
-        </div>
-        <div class="sk-top-nav" data-sk-align="back">
-            =top=
-        </div>
-        -->
         <div class="sk-left-nav" data-sk-align="default">
             =left=
         </div>
         <div class="sk-content">
             =content=
         </div>
-        <div class="sk-right-nav" data-sk-align="default">
+        <div class="sk-right-nav" data-sk-align="back">
             =right=
         </div>
         <div class="sk-bottom-nav" data-sk-align="default">

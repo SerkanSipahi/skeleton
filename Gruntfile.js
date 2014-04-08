@@ -69,6 +69,14 @@ module.exports = function(grunt) {
                 'skeleton.min.js'
             ]
         },
+        scsslint: {
+            allFiles: [
+                'scss/skeleton.scss'
+            ],
+            options: {
+                config: '.scss-lint.yml'
+            }
+        },
         watch: {
             js : {
                 files: watch_files,
@@ -79,7 +87,7 @@ module.exports = function(grunt) {
             },
             sass : {
                 files: ['scss/*.scss'],
-                tasks: ['sass'],
+                tasks: ['sass'/*, 'scsslint'*/],
                 options : {
                     livereload : true
                 }
@@ -96,8 +104,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-bower-install-simple');
     grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-scss-lint');
 
-    grunt.registerTask('default', ['jshint', 'sass', 'watch']);
+    grunt.registerTask('default', ['jshint', 'sass', /*'scsslint',*/ 'watch']);
     grunt.registerTask('bower', [
         'clean:bower',
         'bower-install-simple',

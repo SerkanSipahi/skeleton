@@ -2,12 +2,6 @@ var Skeleton = (function(document, window, undefined){
 
     'use strict';
 
-    // > feature detecting
-    var _feature = {
-        querySelectorAll : !!document.querySelectorAll,
-        functionBind     : !!Function.prototype.bind
-    };
-
     // > private properties
     var _pluginPath        = '#skeleton',
         _$                 = null,
@@ -16,51 +10,23 @@ var Skeleton = (function(document, window, undefined){
         _namespaceAlias    = 'sk',
         _proToString       = Object.prototype.toString;
 
-    // > private methods
-    var _initQuerySelector = function(){
-
-        if(_feature.querySelectorAll && _feature.functionBind){
-            _$ = document.querySelectorAll.bind(document);
-        } else {
-            // > simulate querySelectorAll for ie7, ie8
-            var s = document.createStyleSheet();
-            document.querySelectorAll = function(r, c, i, j, a) {
-                a=document.all, c=[], r = r.replace(/\[for\b/gi, '[htmlFor').split(',');
-                for (i=r.length; i--;) {
-                    s.addRule(r[i], 'k:v');
-                    for (j=a.length; j--;) { a[j].currentStyle.k && c.push(a[j]); }
-                    s.removeRule(0);
-                }
-                return c;
-            };
-            // > simulate functionBind for ie7, ie8
-            Function.prototype.bind = function (oThis) {
-                if (typeof this !== 'function') {
-                    throw { name:'TypeError', message:'Function.prototype.bind - what is trying to be bound is not callable'};
-                }
-                var aArgs = Array.prototype.slice.call(arguments, 1),
-                    fToBind = this,
-                    fNOP = function () {},
-                    fBound = function () {
-                        return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
-                            aArgs.concat(Array.prototype.slice.call(arguments)));
-                    };
-
-                fNOP.prototype = this.prototype;
-                fBound.prototype = new fNOP();
-
-                return fBound;
-            };
-            _$ = document.querySelectorAll.bind(document);
-        }
-    };
+    // > bind queryselectorall to _$
+    _$ = document.querySelectorAll.bind(document);
 
     // > constructor
-    function Skeleton(){
-        // > internals
-        _public = this;
+    function Skeleton(pluginDest){
+
+        this.namespaces = 'sk';
+        this.skNavs     = null;
+        this.skContent  = null;
+        this.skLeft     = null;
+        this.skRight    = null;
+        this.skTop      = null;
+        this.skBottom   = null;
+
+        this.pluginDest = pluginDest;
+
         this.element = _pluginPath+' ';
-        _initQuerySelector();
 
         // > check if element exists etc
         // make some checks here...
@@ -69,13 +35,12 @@ var Skeleton = (function(document, window, undefined){
         this.createContentDatasets();
     }
 
-    // > public properties
-    _public.a = null;
-    _public.b = null;
-
     // > public methods
     Skeleton.prototype = {
 
+        initNavigtions : function(){
+
+        },
         /*
          * @todo: Documentation
          * @todo: move this method to privates
@@ -128,6 +93,7 @@ var Skeleton = (function(document, window, undefined){
                     }
                 }
             }
+
 
         },
         openLeftNav : function(){

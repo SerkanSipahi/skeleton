@@ -192,7 +192,48 @@ $core-first-breakpoint       : 1024px !default;
 	}
 	@mixin createCoreSkFloatPositions($position, $align, $dimension){
 
-		@debug $position $align;
+		// > positions: left, right, top, bottom
+
+		$floatlist : left, right,
+					 left-top, right-top,
+					 right-bottom, left-bottom;
+
+		@if ($position == top or $position == bottom) and
+			($align == default or $align == static or $align == front) {
+
+			@at-root {
+
+				@each $float in $floatlist {
+
+					@if $float == 'left'{
+
+						// > works, nice !
+						.sk-#{$position}-nav[data-sk-float="#{$float}"]{
+							#{$float} : 300px !important;
+							~ .sk-#{$float}-nav {
+								top: 0px !important;
+							}
+						}
+
+					} @else if $float == 'right'{
+
+					} @else if $float == 'left-top' {
+
+					} @else if $float == 'left-bottom'{
+
+					} @else if $float == 'right-top' {
+
+					} @else if $float == 'right-bottom' {
+
+					}
+
+				}
+			}
+
+			@debug $position, $align;
+		}
+
+
 
 	}
 
@@ -204,7 +245,7 @@ $core-first-breakpoint       : 1024px !default;
 		left   : $core-left-nav-x,
 		right  : $core-right-nav-x,
 		top    : $core-top-nav-x,
-		bottom :$core-bottom-nav-x
+		bottom : $core-bottom-nav-x
 	);
 
 	@each $position, $dimension in $positions {
