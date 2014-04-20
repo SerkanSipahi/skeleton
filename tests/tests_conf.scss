@@ -1,0 +1,5 @@
+//@import "../scss/styles";
+@import "../node_modules/bootcamp/dist/bootcamp";
+@include runner-start;
+//@import "tests_skeleton";
+@include runner-end;

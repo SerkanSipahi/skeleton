@@ -47,23 +47,36 @@ var Skeleton = (function(document, window, undefined){
          **/
         createContentDatasets : function(){
 
-            var skNavs     = _$(this.element+'[data-'+_namespaceAlias+'-align]'),
-                skContent  = _$(this.element+' .'+_namespaceAlias+'-content'),
-                skLeft     = _$(this.element+' .'+_namespaceAlias+'-left-nav'),
-                skRight    = _$(this.element+' .'+_namespaceAlias+'-right-nav'),
-                skTop      = _$(this.element+' .'+_namespaceAlias+'-top-nav'),
-                skBottom   = _$(this.element+' .'+_namespaceAlias+'-bottom-nav'),
-                navName    = null,
-                skOptValue = null;
+            var skNavs       = _$(this.element+' [data-sk-align]'),
+                skContent    = _$(this.element+' .sk-content'),
+                skLeft       = _$(this.element+' .sk-left-nav'),
+                skRight      = _$(this.element+' .sk-right-nav'),
+                skTop        = _$(this.element+' .sk-top-nav'),
+                skBottom     = _$(this.element+' .sk-bottom-nav'),
+                navContainer = [skTop[0], skBottom[0], skLeft[0], skRight[0]],
+                navName      = null,
+                skOptValue   = null,
+                res          = null;
 
+
+            // wenn nichts angegeben dann auf data-sk-align="default setzen"
+            // funktionisert nur wenn sieh unten functionen einen freshen domnode(sk-navs ziehen)
+            /*
+            for(var n=0; n<4; n++){
+                res = navContainer[n].getAttribute('data-sk-align');
+                if(res===null){
+                    navContainer[n].setAttribute('data-sk-align', 'default');
+                }
+            }
+            */
 
             // > get all(left,right,top,bottom) algin settings and
             // add them sk-content e.g. data-sk-top-opt="back"
             for(var i= 0, outerLength=skNavs.length;i<outerLength;i++){
-                skOptValue = skNavs[i].getAttribute('data-'+_namespaceAlias+'-align');
+                skOptValue = skNavs[i].getAttribute('data-sk-align');
                 navName = /sk-(.*)-nav/.exec(skNavs[i].className)[1];
                 skContent[0].setAttribute(
-                    'data-'+_namespaceAlias+'-'+navName+'-opt',
+                    'data-sk-'+navName+'-opt',
                     skOptValue
                 );
             }
@@ -77,8 +90,7 @@ var Skeleton = (function(document, window, undefined){
             // .sk-left-nav[data-sk-top-opt="back"]   { top : 0; }
             // .sk-left-nav[data-sk-top-opt="bottom"] { top : 0; }
 
-            var res       = null,
-                element   = null,
+            var element   = null,
                 container = [[skTop[0]||[],'top'], [skBottom[0]||[],'bottom']];
 
             if(skTop.length || skBottom.length){
@@ -86,13 +98,30 @@ var Skeleton = (function(document, window, undefined){
                     // > if we havent top or bottom nav, continue;
                     if(container[x][0].length===0) { continue; }
 
-                    res = container[x][0].getAttribute('data-'+_namespaceAlias+'-align');
+                    res = container[x][0].getAttribute('data-sk-align');
                     if(/top|back|front|bottom/.test(res)){
-                        skLeft[0].setAttribute('data-'+_namespaceAlias+'-'+container[x][1]+'-opt', res);
-                        skRight[0].setAttribute('data-'+_namespaceAlias+'-'+container[x][1]+'-opt', res);
+                        skLeft[0].setAttribute('data-sk-'+container[x][1]+'-opt', res);
+                        skRight[0].setAttribute('data-sk-'+container[x][1]+'-opt', res);
                     }
                 }
             }
+
+            // create float-contents
+            var floatSettingContainer = [], align;
+            for(var z = 0, zLength=[skLeft, skRight].length;z<zLength;z++){
+                res   = [skLeft[0], skRight[0]][z].getAttribute('data-sk-float');
+                align = [skLeft[0], skRight[0]][z].getAttribute('data-sk-align');
+                if(res==='' && /default|static/.test(align)){
+                    floatSettingContainer.push( z===0 ? 'left' : 'right');
+                }
+            }
+            if(floatSettingContainer.length){
+                skTop[0].setAttribute('data-sk-opt-float', floatSettingContainer.join(','));
+                skBottom[0].setAttribute('data-sk-opt-float', floatSettingContainer.join(','));
+            }
+
+            // wenn top-navi oder bottom-navi default ist und linke oder rechte navi static,
+            // dann muss linker/rechter navi top:0, bottom:0 gesetzt werden
 
 
         },

@@ -8,3 +8,4 @@ bower_components
 skeleton.css
 skeleton.min.css
 skeleton.min.js
+tests/results.css

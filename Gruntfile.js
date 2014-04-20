@@ -50,11 +50,19 @@ module.exports = function(grunt) {
         sass: {
             dist: {
                 files: {
-                    'skeleton.css': 'scss/styles.scss'
+                    'skeleton.css': 'scss/styles.scss',
+                    './tests/results.css' : './tests/tests_conf.scss'
                 }
             },
             options: {
                 style: 'expanded'
+            }
+        },
+        bootcamp: {
+            test: {
+                files: {
+                    src: ['./tests/results.css']
+                }
             }
         },
         clean : {
@@ -86,8 +94,8 @@ module.exports = function(grunt) {
                 }
             },
             sass : {
-                files: ['scss/*.scss'],
-                tasks: ['sass'/*, 'scsslint'*/],
+                files: ['scss/*.scss', 'tests/*.scss'],
+                tasks: ['sass'/*, 'scsslint'*/, 'bootcamp'],
                 options : {
                     livereload : true
                 }
@@ -105,8 +113,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bower-install-simple');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-scss-lint');
+    grunt.loadNpmTasks('bootcamp');
 
-    grunt.registerTask('default', ['jshint', 'sass', /*'scsslint',*/ 'watch']);
+    grunt.registerTask('default', ['jshint', 'sass', /*'scsslint',*/ 'bootcamp', 'watch']);
     grunt.registerTask('bower', [
         'clean:bower',
         'bower-install-simple',

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Skeleton */
 
 /*
@@ -7,6 +8,12 @@
  */
 
 // @todo: bug: if we havent top or bottom elementin dom, the
+// @todo: scrolling: wenn die maus innerhalbSyntax error: Invalid US-ASCII character "\xE2" left-nav/right-right/contnet ist,
+// @todo: wenn: data-sk-align nicht angegeben dann ist es immer data-sk-align="default"
+// @todo: alle variablen aus sk-... ändern also als namespaces
+//        scollen diese Bereiche. Und wenn die Maus ausserhalb der
+//        bereiche(also im desktop modus), scrollen alle bereiche gleichzeitig.
+//        Natuerlich wenn es was zu scollen exisitiert
 // sk-left/sk-right/sk-content strechted to top or bottom
 
 .overflow-hidden   { overflow : hidden; }
@@ -19,14 +26,22 @@ body, html {
   height : 100%;
 }
 
-$core-main-wrapper-x : 1200px !default; // > width
-$core-left-nav-x     :  300px !default; // > width
-$core-right-nav-x    :  300px !default; // > width
-$core-top-nav-x      :   50px !default; // > height
-$core-bottom-nav-x   :  100px !default; // > height
-$core-gutter         :   10px !default;
+$core-main-wrapper-x   : 1500px !default; // > width
+$core-left-nav-x       :  300px !default; // > width
+$core-right-nav-x      :  300px !default; // > width
+$core-top-nav-x        :   50px !default; // > height
+$core-bottom-nav-x     :  100px !default; // > height
+$core-gutter           :   10px !default;
 
-$core-first-breakpoint       : 1024px !default;
+$core-first-breakpoint : 1024px !default;
+$core-breakpoints : ( 1024px 951px, 950px 481px, 480px 351px, 350px 280px);
+
+$positions : (
+	left   : $core-left-nav-x,
+	right  : $core-right-nav-x,
+	top    : $core-top-nav-x,
+	bottom : $core-bottom-nav-x
+);
 
 #skeleton {
 
@@ -42,7 +57,6 @@ $core-first-breakpoint       : 1024px !default;
     min-height : 100%;
 
     // > common atrributes
-
 	.sk-left-nav {
 		background-color: green;
 		@extend .overflow-auto;
@@ -84,7 +98,7 @@ $core-first-breakpoint       : 1024px !default;
 		background-color: blue;
 		@extend .overflow-auto;
 		@extend .position-absolute;
-		z-index : 11;
+		z-index : 20; // wenn z-index hier angepasst wird, z-index hier createCoreSkWallPositions nicht vergessen
 		// > if we havent left or right nav in dom,
 		//   this will be the default value of sk-content
 		left    : 0;
@@ -93,26 +107,30 @@ $core-first-breakpoint       : 1024px !default;
 		top     : if($core-top-nav-x != 0px, $core-top-nav-x, 0);
 		bottom  : if($core-bottom-nav-x != 0px, $core-bottom-nav-x, 0);;
 	}
-
 	@mixin createCoreSkWallPositions($position, $align, $width){
 
 		// > here the outer wall( navs--> left, right, top, bottom )
+		// > @align default, static, @positions(left,right,top,bottom), back, front
 		// =====================================================
 		// > set position of .sk-#{$position}-nav[data-sk-align="#{$align}"]
 		// > e.g. with sk-left-nav[data-sk-align="*"]
 
 		//   .sk-left-nav[data-sk-align="left"]  { $position(left)   : -$width(300) }
-		//   .sk-left-nav[data-sk-align="right"] { $position(right)  : -$width(300) }
-		//   .sk-left-nav[data-sk-align="top"]   { $position(top)    : -$width(50) }
-		//   .sk-left-nav[data-sk-align="bottom"]{ $position(bottom) : -$width(100) }
+		//   .sk-right-nav[data-sk-align="right"] { $position(right)  : -$width(300) }
+		//   .sk-top-nav[data-sk-align="top"]   { $position(top)    : -$width(50) }
+		//   .sk-bottom-nav[data-sk-align="bottom"]{ $position(bottom) : -$width(100) }
 		//   and only aligns --> left/right/top/bottom
 		//	 etc. sk-left/top/right/bottom
 
 		// > ***INFO*** hier auch mit @at-root
 		//   ********** dafuer kann das auessere von @include createPositions raus
 
+		// if >>> left,right,top,bottom
 		@if($align != default and $align != static and $align != back and $align != front){
-			#{$position} : $width * -1;
+
+			.sk-#{$position}-nav[data-sk-align="#{$align}"] {
+				#{$position} : $width * -1;
+			}
 
 			//   .sk-left-nav[data-sk-align="default"] { $position(left) : 0 }
 			//   .sk-left-nav[data-sk-align="static"]  { $position(left) : 0  }
@@ -121,24 +139,26 @@ $core-first-breakpoint       : 1024px !default;
 			//   and only aligns --> default/static/back/front
 			//	 etc. sk-left/top/right/bottom
 
+		// if >>> default/static/back/front
 		} @else {
 
-			#{$position} : 0;
+			.sk-#{$position}-nav[data-sk-align="#{$align}"] {
+				#{$position} : 0;
 
-			// > align=front has the same setting. The only difference is the z-index
-			@if($align == front and ( $position == top or $position == bottom )){
-				// > debug opacity
-				opacity: 0.5;
-				z-index: 12 !important;
+				// > align=front has the same setting. The only difference is the z-index
+				@if($align == front and ( $position == top or $position == bottom )){
+					// > debug opacity
+					opacity: 0.5;
+					z-index: 22 !important;
+				}
 			}
 		}
 	}
 	@mixin createCoreSkContentPositions($position, $align, $width){
 
-		// > **********************************************************************
-		// > **********************************************************************
-
 		// > here the inner wall( content )
+
+		// > @align default, static, @positions(left,right,top,bottom), back, front
 
 		// > set position of .sk-content[data-sk-#{$position}-opt="#{$align}"]
 		// > e.g. with sk-content[data-sk-left-top="*"]
@@ -151,13 +171,12 @@ $core-first-breakpoint       : 1024px !default;
 		//   .sk-content[data-sk-left-opt="top"]     { $position : 0; }
 		//   .sk-content[data-sk-left-opt="bottom"]  { $position : 0; }
 
-		@at-root {
-			#skeleton .sk-content[data-sk-#{$position}-opt="#{$align}"] {
-				@if($align != default and $align != static and $align){
-					#{$position} : 0;
-				} @else {
-					#{$position} : $width !important;
-				}
+
+		.sk-content[data-sk-#{$position}-opt="#{$align}"] {
+			@if($align != default and $align != static and $align){
+				#{$position} : 0;
+			} @else {
+				#{$position} : $width /*!important*/;
 			}
 		}
 	}
@@ -180,74 +199,84 @@ $core-first-breakpoint       : 1024px !default;
 			// .sk-left-nav[data-sk-bottom-opt="front"]  { bottom : 0; }
 			// .sk-left-nav[data-sk-bottom-opt="bottom"] { bottom : 0; }
 
-			@at-root {
-				@each $navAlign in left right {
-					#skeleton .sk-#{$navAlign}-nav[data-sk-#{$position}-opt="#{$align}"] {
-						#{$position} : 0;
-					}
+			@each $navAlign in left right {
+				.sk-#{$navAlign}-nav[data-sk-#{$position}-opt="#{$align}"] {
+					#{$position} : 0;
 				}
 			}
 
 		}
 	}
-	@mixin createCoreSkFloatPositions($position, $align, $dimension){
+	@mixin createCoreSkFloatPositions(){
 
-		// > positions: left, right, top, bottom
+		@each $item in default, static {
+			.sk-left-nav[data-sk-align="#{$item}"][data-sk-float],
+			.sk-right-nav[data-sk-align="#{$item}"][data-sk-float] {
+				top: 0; bottom: 0;
+			}
+		}
 
-		$floatlist : left, right,
-					 left-top, right-top,
-					 right-bottom, left-bottom;
-
-		@if ($position == top or $position == bottom) and
-			($align == default or $align == static or $align == front) {
-
-			@at-root {
-
-				@each $float in $floatlist {
-
-					@if $float == 'left'{
-
-						// > works, nice !
-						.sk-#{$position}-nav[data-sk-float="#{$float}"]{
-							#{$float} : 300px !important;
-							~ .sk-#{$float}-nav {
-								top: 0px !important;
-							}
-						}
-
-					} @else if $float == 'right'{
-
-					} @else if $float == 'left-top' {
-
-					} @else if $float == 'left-bottom'{
-
-					} @else if $float == 'right-top' {
-
-					} @else if $float == 'right-bottom' {
-
-					}
-
+		@each $item in left, right {
+			@each $align in default, static, front {
+				// >>> wenn nur an der linken oder rechten navi data-sk-float angeben wurde
+				.sk-top-nav[data-sk-align="#{$align}"][data-sk-opt-float="#{$item}"] {
+					#{$item} : map-get($positions, $item);
+				}
+				.sk-bottom-nav[data-sk-align="#{$align}"][data-sk-opt-float="#{$item}"] {
+					#{$item} : map-get($positions, $item);
+				}
+				// >>> wenn auf linker und rechter navi data-sk-float angegen wurde
+				.sk-top-nav[data-sk-align="#{$align}"][data-sk-opt-float="left,right"] {
+					left: map-get($positions, left); right: map-get($positions, right);
+				}
+				.sk-bottom-nav[data-sk-align="#{$align}"][data-sk-opt-float="left,right"] {
+					left: map-get($positions, left); right: map-get($positions, right);
 				}
 			}
-
-			@debug $position, $align;
 		}
 
 
+	}
+	@mixin create-media-queries($first-breakpoint, $positions){
+
+		@media (max-width: $first-breakpoint)  {
+
+			.sk-top-nav, .sk-bottom-nav { left:0!important;right:0!important; }
+
+			// >>> *****************************************************************
+
+			.sk-content[data-sk-left-opt="default"] { left:0 !important; }
+			.sk-content[data-sk-right-opt="default"] { right:0 !important; }
+			.sk-content[data-sk-top-opt="default"] { top:0 !important; }
+			.sk-content[data-sk-bottom-opt="default"] { bottom:0 !important; }
+
+			.sk-content[data-sk-left-opt="front"] { left:0 !important; }
+			.sk-content[data-sk-right-opt="front"] { right:0 !important; }
+			.sk-content[data-sk-top-opt="front"] { top:0 !important; }
+			.sk-content[data-sk-bottom-opt="front"] { bottom:0 !important; }
+
+			// >>> *****************************************************************
+
+			.sk-content[data-sk-left-opt="static"] { left: map-get($positions, left) !important; }
+			.sk-content[data-sk-right-opt="static"] { right: map-get($positions, right) !important; }
+			.sk-content[data-sk-top-opt="static"] { top: map-get($positions, top) !important; }
+			.sk-content[data-sk-bottom-opt="static"] { bottom: map-get($positions, bottom) !important; }
+
+			// >>> *****************************************************************
+
+			//.sk-top-nav, .sk-bottom-nav { z-index: 10; }
+			//.sk-left-nav, .sk-right-nav { z-index:  9; }
+
+			// >>> static mit der z Achse vorziehen!
+
+			[data-sk-align="static"] { z-index: 10; }
+			[data-sk-align="default"], [data-sk-align="front"] { z-index:  9; }
+		}
 
 	}
 
-	/*
-	 * Desktop settings
-	 */
-
-	$positions : (
-		left   : $core-left-nav-x,
-		right  : $core-right-nav-x,
-		top    : $core-top-nav-x,
-		bottom : $core-bottom-nav-x
-	);
-
+	// >>> init Skeleton
+	// >>> als funktion auslagern
 	@each $position, $dimension in $positions {
 
 		// >>> definition description
@@ -259,56 +288,17 @@ $core-first-breakpoint       : 1024px !default;
 		//		- top nav has, in addition, the top align
 		//		- bottom nav has, in addition, the bottom align
 		@each $align  in default, static, $position, back, front {
-			.sk-#{$position}-nav[data-sk-align="#{$align}"] {
-				@include createCoreSkWallPositions($position, $align, $dimension);
-				@include createCoreSkContentPositions($position, $align, $dimension);
-				@include createCoreSkTopBottomPositions($position, $align, $dimension);
-				@include createCoreSkFloatPositions($position, $align, $dimension);
-			}
+			// > .sk-... move inside createCoreSkWallPositions
+			@include createCoreSkWallPositions($position, $align, $dimension);
+			@include createCoreSkContentPositions($position, $align, $dimension);
+			@include createCoreSkTopBottomPositions($position, $align, $dimension);
 		}
 	}
+	// >> you can add only left-nav data-sk-float="left" and
+	// >> right-nav data-sk-float="right"
+	@include createCoreSkFloatPositions();
 
-	/*
-	 * Tablet/Mobile settings
-	 */
-
-    $aligns:( left, right, top, bottom );
-	//key=min, value=max
-	$breakpoints : ( 1024px : 951px, 950px : 481px, 480px : 351px, 350px : 280px);
-
-	// > from the first breakpoint will all sk-contents to 0px;
-	// > static is always visible
-    @each $max, $min in $breakpoints {
-
-        @media (min-width: $min) and (max-width: $max) {
-
-            @each $nav in $aligns {
-                @each $align in default, back, $nav {
-                    .sk-#{$nav}-nav[data-sk-align="#{$align}"] {
-                        @if $nav == left {
-                            @if $align == default {}
-                            @if $align == left {}
-                            @if $align == back {}
-                        }
-                        @if $nav == right {
-                            @if $align == default {}
-                            @if $align == right {}
-                            @if $align == back {}
-                        }
-                        @if $nav == top {
-                            @if $align == default {}
-                            @if $align == top {}
-                            @if $align == back {}
-                        }
-                        @if $nav == bottom {
-                            @if $align == default {}
-                            @if $align == bottom {}
-                            @if $align == back {}
-                        }
-                        background-color: red;
-                    }
-                }
-            }
-        }
-    }
+	// >>> init breakpoints
+	// >>> als funktion auslagern
+	@include create-media-queries($core-first-breakpoint, $positions);
 }

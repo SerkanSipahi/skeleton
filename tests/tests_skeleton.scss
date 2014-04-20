@@ -1,0 +1,7 @@
+@include describe("Math Power") {
+	@include it("should expect positive values to be calculated correctly") {
+
+		@include should( expect( 1 ), to( equal( 1)));
+
+	}
+}

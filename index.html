@@ -12,21 +12,41 @@
     </script>
 </head>
 <body>
+
+    <!--
+        todo: wenn data-sk-align nicht angegeben dann,
+        ist data-sk-align="default" default!
+
+        todo: man sollte auch statt top-nav=align-top, bottom-nav=align-bottom,
+        left-nav=align-left, right-nav=align-right auch nur outside angegeben werden
+        können.
+
+        todo: wenn align=static zugewiesen wird, werden diese nach dem ersten
+        breakpoint nicht ausgeblendet!
+
+        Probleme wenn:
+            top-nav=static, left-nav=static, right-nav=default, bottom-nav=default
+            top-nav=default, left-nav=static(data-sk-float), right-nav=default, bottom-nav=back
+            top-nav=static, left-nav=static(data-sk-float), right-nav=default, bottom-nav=back
+            top-nav=static, left-nav=static, right-nav=default, bottom-nav=back || z-index problem!
+            top-nav=static, left-nav=static, right-nav=default, bottom-nav=default || z-index problem!
+    -->
+
     <div id="skeleton">
-        <div class="sk-top-nav" data-sk-align="front" data-sk-float="left">
+        <div class="sk-top-nav" data-sk-align="default">
             =top=
         </div>
-        <div class="sk-left-nav" data-sk-align="default">
+        <div class="sk-left-nav" data-sk-align="static">
             =left=
         </div>
         <div class="sk-content">
             =content=
         </div>
-        <div class="sk-right-nav" data-sk-align="back">
+        <div class="sk-right-nav" data-sk-align="static">
             =right=
         </div>
         <div class="sk-bottom-nav" data-sk-align="default">
-            =back=
+            =bottom=
         </div>
     </div>
 </body>
