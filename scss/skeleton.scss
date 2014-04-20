@@ -271,6 +271,18 @@ $positions : (
 
 			[data-sk-align="static"] { z-index: 10; }
 			[data-sk-align="default"], [data-sk-align="front"] { z-index:  9; }
+
+			// >>> wenn top-navi oder bottom-navi default ist und linke oder rechte navi static,
+			// dann muss linker/rechter navi top:0, bottom:0 gesetzt werden
+
+			.sk-left-nav[data-sk-top-opt="default"],
+			.sk-right-nav[data-sk-top-opt="default"]{
+				top:0;
+			}
+			.sk-left-nav[data-sk-bottom-opt="default"],
+			.sk-right-nav[data-sk-bottom-opt="default"] {
+				bottom:0;
+			}
 		}
 
 	}

@@ -123,6 +123,30 @@ var Skeleton = (function(document, window, undefined){
             // wenn top-navi oder bottom-navi default ist und linke oder rechte navi static,
             // dann muss linker/rechter navi top:0, bottom:0 gesetzt werden
 
+            // hat top default wert? wenn ja schaue ob linke oder rechte navi static haben!
+            // wenn ja, .sk-left-nav[data-sk-top-opt="default"] usw.
+
+            var alignTop    = skTop[0].getAttribute('data-sk-align'),
+                alignBottom = skBottom[0].getAttribute('data-sk-align'),
+                alignLeft   = skLeft[0].getAttribute('data-sk-align'),
+                alignRight  = skRight[0].getAttribute('data-sk-align');
+
+            if(alignTop==='default'){
+                if(alignLeft==='static'){
+                    skLeft[0].setAttribute('data-sk-top-opt', 'default');
+                }
+                if(alignRight==='static'){
+                    skRight[0].setAttribute('data-sk-top-opt', 'default');
+                }
+            }
+            if(alignBottom==='default'){
+                if(alignLeft==='static'){
+                    skLeft[0].setAttribute('data-sk-bottom-opt', 'default');
+                }
+                if(alignRight==='static'){
+                    skRight[0].setAttribute('data-sk-bottom-opt', 'default');
+                }
+            }
 
         },
         openLeftNav : function(){
