@@ -1,6 +1,6 @@
 // Core variables and mixins
-//@import "../vendor/scss/bootstrap/variables";
-//@import "../vendor/scss/bootstrap/mixins";
+@import "../vendor/scss/bootstrap/variables";
+@import "../vendor/scss/bootstrap/mixins";
 
 // Reset
 @import "../vendor/scss/bootstrap/normalize";
@@ -9,4 +9,4 @@
 //@import "../vendor/scss/bootstrap/grid";
 
 // Skeleton
-@import "./skeleton";
+@import "../tmp/skeleton_tmp";

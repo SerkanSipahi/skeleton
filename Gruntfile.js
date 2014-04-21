@@ -88,17 +88,68 @@ module.exports = function(grunt) {
         watch: {
             js : {
                 files: watch_files,
-                tasks: ['jshint'],
+                tasks: ['jshint', 'skeleton:until'],
                 options : {
-                    livereload : true
+                    livereload : false
                 }
             },
             sass : {
                 files: ['scss/*.scss', 'tests/*.scss'],
-                tasks: ['sass'/*, 'scsslint'*/, 'bootcamp'],
+                tasks: ['skeleton:until', 'sass'/*, 'scsslint'*/, 'bootcamp'],
                 options : {
-                    livereload : true
+                    livereload : false
                 }
+            },
+            html : {
+                files: ['index.html'],
+                tasks: ['skeleton:until', 'sass'/*, 'scsslint'*/, 'bootcamp'],
+                options : {
+                    livereload : false
+                }
+            }
+        }
+    });
+
+    grunt.task.registerTask('skeleton', 'Skeleton Task', function(arg) {
+        if (arguments.length === 0) {
+            console.log(this.name + ', no args');
+        } else {
+            if(arg === 'until'){
+
+                var fs       = require('fs'),
+                    filename = './index.html',
+                    pattern  = /sk-(left|top|bottom|right)-nav(?:.*?)data-sk-align="static:until\((\d+px)\)"/gm,
+                    match, container=[];
+
+                fs.readFile(filename, 'utf8', function(err, data) {
+
+                    if (err) { throw err; }
+                    while(match!==null){
+                        match = pattern.exec(data);
+                        if(match!==null){
+                            container.push(match[1]+' '+match[2]);
+                        }
+                    }
+
+                    if(container.length){
+                        console.log(container);
+                        fs.readFile('scss/skeleton.scss', 'utf8', function(err, data) {
+
+                            var __skeleton_until_navs__;
+                            if(container.length===1){
+                                __skeleton_until_navs__ = '('+container[0].replace(' ', ' : ')+')';
+                            } else {
+                                __skeleton_until_navs__ = container.join(', ');
+                            }
+
+                            fs.writeFile('tmp/skeleton_tmp.scss', data.replace('__skeleton-until-navs__', __skeleton_until_navs__), function (err) {
+                                if (err) { throw err; }
+                                console.log('It\'s saved!');
+                            });
+                        });
+
+                    }
+                });
             }
         }
     });
@@ -115,7 +166,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('bootcamp');
 
-    grunt.registerTask('default', ['jshint', 'sass', /*'scsslint',*/ 'bootcamp', 'watch']);
+    grunt.registerTask('default', ['jshint', 'skeleton:until', 'sass', /*'scsslint',*/ 'bootcamp', 'watch']);
     grunt.registerTask('bower', [
         'clean:bower',
         'bower-install-simple',

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* Skeleton */
+/* Skeleton Tablet-First */
 
 /*
  * Dont be afraid about the generated css ( skeleton.css ) code !
@@ -8,7 +8,6 @@
  */
 
 // @todo: bug: if we havent top or bottom elementin dom, the
-// @todo: scrolling: wenn die maus innerhalbSyntax error: Invalid US-ASCII character "\xE2" left-nav/right-right/contnet ist,
 // @todo: wenn: data-sk-align nicht angegeben dann ist es immer data-sk-align="default"
 // @todo: alle variablen aus sk-... ändern also als namespaces
 //        scollen diese Bereiche. Und wenn die Maus ausserhalb der
@@ -16,10 +15,22 @@
 //        Natuerlich wenn es was zu scollen exisitiert
 // sk-left/sk-right/sk-content strechted to top or bottom
 
+
 .overflow-hidden   { overflow : hidden; }
 .overflow-auto     { overflow : auto;  }
 .position-relative { position : relative ; }
 .position-absolute { position : absolute ; }
+
+
+#skeleton {
+	.sk-left-nav,
+	.sk-top-nav,
+	.sk-right-nav,
+	.sk-bottom-nav,
+	.sk-content {
+		@include transition(all 250ms ease-in);
+	}
+};
 
 body, html {
   @extend .overflow-hidden;
@@ -33,7 +44,7 @@ $core-top-nav-x        :   50px !default; // > height
 $core-bottom-nav-x     :  100px !default; // > height
 $core-gutter           :   10px !default;
 
-$core-first-breakpoint : 1024px !default;
+$core-first-breakpoint : 1024 !default;
 $core-breakpoints : ( 1024px 951px, 950px 481px, 480px 351px, 350px 280px);
 
 $positions : (
@@ -128,7 +139,12 @@ $positions : (
 		// if >>> left,right,top,bottom
 		@if($align != default and $align != static and $align != back and $align != front){
 
+			// > outside: left/left, top/top, right/right, bottom/bottom
 			.sk-#{$position}-nav[data-sk-align="#{$align}"] {
+				#{$position} : $width * -1;
+			}
+			// > outside
+			.sk-#{$position}-nav[data-sk-align="outside"] {
 				#{$position} : $width * -1;
 			}
 
@@ -237,23 +253,27 @@ $positions : (
 
 
 	}
-	@mixin create-media-queries($first-breakpoint, $positions){
+	@mixin create-media-queries($min, $max, $positions){
 
-		@media (max-width: $first-breakpoint)  {
+		@media (min-width: $min) and (max-width: $max){
 
-			.sk-top-nav, .sk-bottom-nav { left:0!important;right:0!important; }
+			// >>> wenn left/right-navi static, top/bottom-navi static,
+			// und left/right-navi data-sk-float, dann top/bottom-nav nicht
+			// position left=0/right=0 sondern top/bottom-nav = $nav-with
+
+			.sk-top-nav:not(.sk-top-nav[data-sk-opt-float="left"]),
+			.sk-bottom-nav:not(.sk-bottom-nav[data-sk-opt-float="left"]) {
+				left:0!important;right:0!important;
+			}
 
 			// >>> *****************************************************************
 
-			.sk-content[data-sk-left-opt="default"] { left:0 !important; }
-			.sk-content[data-sk-right-opt="default"] { right:0 !important; }
-			.sk-content[data-sk-top-opt="default"] { top:0 !important; }
-			.sk-content[data-sk-bottom-opt="default"] { bottom:0 !important; }
-
-			.sk-content[data-sk-left-opt="front"] { left:0 !important; }
-			.sk-content[data-sk-right-opt="front"] { right:0 !important; }
-			.sk-content[data-sk-top-opt="front"] { top:0 !important; }
-			.sk-content[data-sk-bottom-opt="front"] { bottom:0 !important; }
+			@each $item in default, front {
+				.sk-content[data-sk-left-opt="#{$item}"] { left:0 !important; }
+				.sk-content[data-sk-right-opt="#{$item}"] { right:0 !important; }
+				.sk-content[data-sk-top-opt="#{$item}"] { top:0 !important; }
+				.sk-content[data-sk-bottom-opt="#{$item}"] { bottom:0 !important; }
+			}
 
 			// >>> *****************************************************************
 
@@ -263,9 +283,6 @@ $positions : (
 			.sk-content[data-sk-bottom-opt="static"] { bottom: map-get($positions, bottom) !important; }
 
 			// >>> *****************************************************************
-
-			//.sk-top-nav, .sk-bottom-nav { z-index: 10; }
-			//.sk-left-nav, .sk-right-nav { z-index:  9; }
 
 			// >>> static mit der z Achse vorziehen!
 
@@ -283,8 +300,38 @@ $positions : (
 			.sk-right-nav[data-sk-bottom-opt="default"] {
 				bottom:0;
 			}
+
 		}
 
+		// > static:until(n)
+
+		@each $navigation, $size in __skeleton-until-navs__ {
+
+			@if $navigation != __skeleton-until-navs__ {
+
+				.sk-#{$navigation}-nav[data-sk-align^="static:until"]{
+					#{$navigation} : 0;
+				}
+
+				@if $navigation == left or $navigation == right {
+					.sk-#{$navigation}-nav[data-sk-align^="static:until"][data-sk-float]{
+						top : 0; bottom: 0;
+					}
+				}
+				@if $navigation == top or $navigation == bottom {
+					.sk-#{$navigation}-nav[data-sk-align^="static:until"][data-sk-opt-float="left"]{
+						//top : 0; bottom: 0;
+					}
+				}
+
+				@media (min-width: $size) {
+					.sk-content[data-sk-#{$navigation}-opt="static:until(#{$size})"] { #{$navigation}: map-get($positions, $navigation) !important; }
+				}
+				@media (max-width: $size) {
+					.sk-content[data-sk-#{$navigation}-opt="static:until(#{$size})"] { #{$navigation}:0 !important; }
+				}
+			}
+		}
 	}
 
 	// >>> init Skeleton
@@ -312,5 +359,7 @@ $positions : (
 
 	// >>> init breakpoints
 	// >>> als funktion auslagern
-	@include create-media-queries($core-first-breakpoint, $positions);
+	// >>> oientation portrait oder orientation landcape übermitteln können
+	// mit groesse, also portrait= ab 768 und landscape ab 1024
+	@include create-media-queries(0px, 1024px, $positions);
 }

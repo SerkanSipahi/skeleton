@@ -9,3 +9,4 @@ skeleton.css
 skeleton.min.css
 skeleton.min.js
 tests/results.css
+tmp/skeleton_tmp.scss
