@@ -39,7 +39,7 @@ body, html {
 
 $core-main-wrapper-x   : 1500px !default; // > width
 $core-left-nav-x       :  300px !default; // > width
-$core-right-nav-x      :  300px !default; // > width
+$core-right-nav-x      :   80px !default; // > width
 $core-top-nav-x        :   50px !default; // > height
 $core-bottom-nav-x     :  100px !default; // > height
 $core-gutter           :   10px !default;
@@ -268,6 +268,9 @@ $positions : (
 
 			// >>> *****************************************************************
 
+			// wenn left/top/right/bottom -nav=default oder front, dann navs nach
+			// aussen aussrichten
+			// info: diese attribute dynamisch(javascript) eingebunden
 			@each $item in default, front {
 				.sk-content[data-sk-left-opt="#{$item}"] { left:0 !important; }
 				.sk-content[data-sk-right-opt="#{$item}"] { right:0 !important; }
@@ -277,6 +280,7 @@ $positions : (
 
 			// >>> *****************************************************************
 
+			// wenn nur static angegeben dann nehmen alle ihre positionen ein und ändern sich nicht
 			.sk-content[data-sk-left-opt="static"] { left: map-get($positions, left) !important; }
 			.sk-content[data-sk-right-opt="static"] { right: map-get($positions, right) !important; }
 			.sk-content[data-sk-top-opt="static"] { top: map-get($positions, top) !important; }
@@ -305,7 +309,15 @@ $positions : (
 
 		// > static:until(n)
 
-		@each $navigation, $size in __skeleton-until-navs__ {
+		$__skeleton-until-navs__ : __skeleton-until-navs__;
+
+		// > special untils ( if top or bottom greater than left or right nav)
+		@if($__skeleton-until-navs__ != __skeleton-until-navas__){
+			@debug xxxxxxxxx---------test;
+		}
+
+		// > default untils
+		@each $navigation, $size in $__skeleton-until-navs__ {
 
 			@if $navigation != __skeleton-until-navs__ {
 
@@ -313,25 +325,42 @@ $positions : (
 					#{$navigation} : 0;
 				}
 
+				//float and until
 				@if $navigation == left or $navigation == right {
 					.sk-#{$navigation}-nav[data-sk-align^="static:until"][data-sk-float]{
 						top : 0; bottom: 0;
 					}
 				}
-				@if $navigation == top or $navigation == bottom {
-					.sk-#{$navigation}-nav[data-sk-align^="static:until"][data-sk-opt-float="left"]{
-						//top : 0; bottom: 0;
-					}
-				}
 
 				@media (min-width: $size) {
-					.sk-content[data-sk-#{$navigation}-opt="static:until(#{$size})"] { #{$navigation}: map-get($positions, $navigation) !important; }
+					.sk-content[data-sk-#{$navigation}-opt="static:until(#{$size})"] {
+						#{$navigation}: map-get($positions, $navigation) !important;
+					}
 				}
-				@media (max-width: $size) {
-					.sk-content[data-sk-#{$navigation}-opt="static:until(#{$size})"] { #{$navigation}:0 !important; }
+				@media (max-width: $size - 1px) {
+					.sk-content[data-sk-#{$navigation}-opt="static:until(#{$size})"] {
+						#{$navigation}:0 !important;
+					}
 				}
 			}
 		}
+
+		// > die klassen/regeln werden dynamisch per javascript eingebunden.
+		// wenn top oder bottom navi grösser(until) left oder right,
+		// dann muss z.B. bei top größer, linke und rechte navi top: 0px werden
+		@if top == __top__{
+			.sk-left-nav[data-top-nav-greater-this-class],
+			.sk-right-nav[data-top-nav-greater-this-class]{
+				top : 0;
+			}
+		}
+		@if bottom == __bottom__ {
+			.sk-left-nav[data-bottom-nav-greater-this-class],
+			.sk-right-nav[data-bottom-nav-greater-this-class]{
+				bottom : 0;
+			}
+		}
+
 	}
 
 	// >>> init Skeleton

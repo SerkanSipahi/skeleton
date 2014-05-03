@@ -142,8 +142,9 @@ module.exports = function(grunt) {
                                 __skeleton_until_navs__ = container.join(', ');
                             }
 
-                            fs.writeFile('tmp/skeleton_tmp.scss', data.replace('__skeleton-until-navs__', __skeleton_until_navs__), function (err) {
+                            fs.writeFile('tmp/skeleton_tmp.scss', data.replace(/[^$]__skeleton-until-navs__/, __skeleton_until_navs__), function (err) {
                                 if (err) { throw err; }
+                                fs.chmod('tmp/skeleton_tmp.scss', '0777');
                                 console.log('It\'s saved!');
                             });
                         });
