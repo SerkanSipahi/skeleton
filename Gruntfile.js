@@ -116,41 +116,114 @@ module.exports = function(grunt) {
         } else {
             if(arg === 'until'){
 
-                var fs       = require('fs'),
-                    filename = './index.html',
-                    pattern  = /sk-(left|top|bottom|right)-nav(?:.*?)data-sk-align="static:until\((\d+px)\)"/gm,
-                    match, container=[];
+                var $             = require('jquery-deferred'),
+                    fs            = require('fs'),
+                    index_html    = './index.html',
+                    skeleton_scss = './scss/skeleton.scss',
+                    skeleton_tmp  = './tmp/skeleton_tmp.scss',
+                    pattern       = /sk-(left|top|bottom|right)-nav(?:.*?)data-sk-align="static:until\((\d+px)\)"/gm,
+                    matched       = [],
+                    sk_scss_data  = '',
 
-                fs.readFile(filename, 'utf8', function(err, data) {
+                    error = function(name, message){
+                        throw { name : name, message : message };
+                    },
+                    match = function(pattern, data, slice_start, slice_end){
 
-                    if (err) { throw err; }
-                    while(match!==null){
-                        match = pattern.exec(data);
-                        if(match!==null){
-                            container.push(match[1]+' '+match[2]);
-                        }
-                    }
+                        var _dfd = new $.Deferred(),
+                            match, container=[], tmpContainer=[];
 
-                    if(container.length){
-                        console.log(container);
-                        fs.readFile('scss/skeleton.scss', 'utf8', function(err, data) {
-
-                            var __skeleton_until_navs__;
-                            if(container.length===1){
-                                __skeleton_until_navs__ = '('+container[0].replace(' ', ' : ')+')';
-                            } else {
-                                __skeleton_until_navs__ = container.join(', ');
+                        while(match!==null){
+                            match = pattern.exec(data);
+                            if(match!==null){
+                                tmpContainer=[];
+                                for(var i= ( slice_start || 0 ), length=( slice_end || match.length ); i<length; i++){
+                                    tmpContainer.push(match[i]);
+                                }
+                                container.push(tmpContainer);
                             }
+                        }
+                        _dfd.resolve(container);
+                        return _dfd.promise();
+                    },
+                    readFile = function(filename, charset){
 
-                            fs.writeFile('tmp/skeleton_tmp.scss', data.replace(/[^$]__skeleton-until-navs__/, __skeleton_until_navs__), function (err) {
-                                if (err) { throw err; }
-                                fs.chmod('tmp/skeleton_tmp.scss', '0777');
-                                console.log('It\'s saved!');
-                            });
+                        var _dfd = new $.Deferred(),
+                            _charset = charset || 'utf8';
+
+                        fs.readFile(filename, _charset, function(err, data) {
+                            if(err) { _dfd.reject('FileNotFound', 'cant load [' + filename + '] file!'); }
+                            _dfd.resolve(data);
                         });
+                        return _dfd.promise();
 
+                    },
+                    writeFile = function(filename, data, chmod){
+
+                        var _dfd    = new $.Deferred(),
+                            _data  = data  || ' ',
+                            _chmod = chmod || '0777';
+
+                        fs.writeFile(filename, _data, function (err) {
+                            if(err) { _dfd.reject('FileCouldNotWrite', 'cant write [' + filename + '] file!'); }
+                            fs.chmod(filename, _chmod, function(){
+                                _dfd.reject('PermissionDenied', 'cant set chmod [' + _chmod + ']');
+                            });
+                            _dfd.resolve(200);
+                        });
+                        return _dfd.promise();
+                    };
+
+                var tasks = $.when(writeFile(skeleton_tmp))
+                    .then(function(){
+                        return readFile(index_html);
+                    })
+                    .then(function(data){
+                        return match(pattern, data, 1).done(function(data){
+                            matched = data;
+                        });
+                    })
+                    .then(function(){
+                        return readFile(skeleton_scss).done(function(data){
+                            sk_scss_data = data;
+                        });
+                    });
+
+                tasks.done(function(){
+
+                    var __skeleton_until_navs__,
+                        __skeleton_until_as_hash__,
+                        tmpContainer = [], tmpContainerHash=[];
+
+                    if(matched.length===1){
+                        __skeleton_until_navs__ = '('+matched[0].join(' ').replace(' ', ' : ')+')';
+                        __skeleton_until_as_hash__ = __skeleton_until_navs__;
+                    } else {
+                        matched.forEach(function(element){
+                            tmpContainer.push(element.join(' '));
+                            tmpContainerHash.push(element.join(' : '));
+                        });
+                        __skeleton_until_navs__ = tmpContainer.join(', ');
+                        __skeleton_until_as_hash__ = '( '+tmpContainerHash.join(', ')+ ' )';
                     }
+
+                    if(matched.length){
+                        sk_scss_data = sk_scss_data.replace(/[^$](__skeleton-until-navs__|__skeleton-until-navs-as-hash__)/gmi, function(match, p1){
+                            var res = '';
+                            p1==='__skeleton-until-navs__' ? res = __skeleton_until_navs__ : null;
+                            p1==='__skeleton-until-navs-as-hash__' ? res = __skeleton_until_as_hash__ : null;
+                            return res;
+                        });
+                    }
+
+                    writeFile('tmp/skeleton_tmp.scss', sk_scss_data).done(function(data){
+                        console.log('Tasks finished!');
+                    });
+
+                }).fail(function(_error, _message){
+                    error.call(null, _error, _message);
                 });
+
             }
         }
     });

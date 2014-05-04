@@ -310,16 +310,21 @@ $positions : (
 		// > static:until(n)
 
 		$__skeleton-until-navs__ : __skeleton-until-navs__;
+		$__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 
 		// > special untils ( if top or bottom greater than left or right nav)
-		@if($__skeleton-until-navs__ != __skeleton-until-navas__){
+		@if(type-of($__skeleton-until-navs-as-hash__) == map or
+			type-of($__skeleton-until-navs-as-hash__) == list){
 			@debug xxxxxxxxx---------test;
 		}
 
-		// > default untils
-		@each $navigation, $size in $__skeleton-until-navs__ {
+		@if(type-of($__skeleton-until-navs__) == map or
+			type-of($__skeleton-until-navs__) == list){
 
-			@if $navigation != __skeleton-until-navs__ {
+			// > default untils
+			@each $navigation, $size in $__skeleton-until-navs__ {
+
+				@debug $navigation;
 
 				.sk-#{$navigation}-nav[data-sk-align^="static:until"]{
 					#{$navigation} : 0;
@@ -342,22 +347,6 @@ $positions : (
 						#{$navigation}:0 !important;
 					}
 				}
-			}
-		}
-
-		// > die klassen/regeln werden dynamisch per javascript eingebunden.
-		// wenn top oder bottom navi grösser(until) left oder right,
-		// dann muss z.B. bei top größer, linke und rechte navi top: 0px werden
-		@if top == __top__{
-			.sk-left-nav[data-top-nav-greater-this-class],
-			.sk-right-nav[data-top-nav-greater-this-class]{
-				top : 0;
-			}
-		}
-		@if bottom == __bottom__ {
-			.sk-left-nav[data-bottom-nav-greater-this-class],
-			.sk-right-nav[data-bottom-nav-greater-this-class]{
-				bottom : 0;
 			}
 		}
 
