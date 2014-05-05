@@ -270,7 +270,7 @@ $positions : (
 
 			// wenn left/top/right/bottom -nav=default oder front, dann navs nach
 			// aussen aussrichten
-			// info: diese attribute dynamisch(javascript) eingebunden
+			// info: diese attribute werden dynamisch(javascript) eingebunden
 			@each $item in default, front {
 				.sk-content[data-sk-left-opt="#{$item}"] { left:0 !important; }
 				.sk-content[data-sk-right-opt="#{$item}"] { right:0 !important; }
@@ -308,14 +308,50 @@ $positions : (
 		}
 
 		// > static:until(n)
-
 		$__skeleton-until-navs__ : __skeleton-until-navs__;
 		$__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 
-		// > special untils ( if top or bottom greater than left or right nav)
-		@if(type-of($__skeleton-until-navs-as-hash__) == map or
-			type-of($__skeleton-until-navs-as-hash__) == list){
-			@debug xxxxxxxxx---------test;
+		@debug $__skeleton-until-navs__;
+		@debug $__skeleton-until-navs-as-hash__;
+
+		// > special untils ( if top or bottom greater than left or right nav),
+		@if(type-of($__skeleton-until-navs-as-hash__) == map){
+
+			$map : $__skeleton-until-navs-as-hash__;
+
+			@if(map-has-key($map, top) and map-has-key($map, left)){
+				@if(map-get($map, top) >= map-get($map, left)){
+					@media (max-width: map-get($map, top)) {
+						.sk-left-nav {top : 0;}
+						.sk-right-nav {top : 0;}
+					}
+				}
+			}
+			@if(map-has-key($map, top) and map-has-key($map, right)){
+				@if(map-get($map, top) >= map-get($map, right)){
+					@media (max-width: map-get($map, top)) {
+						.sk-left-nav {top : 0;}
+						.sk-right-nav {top : 0;}
+					}
+				}
+			}
+			@if(map-has-key($map, bottom) and map-has-key($map, left)){
+				@if(map-get($map, bottom) >= map-get($map, left)){
+					@media (max-width: map-get($map, bottom)) {
+						.sk-left-nav {bottom : 0;}
+						.sk-right-nav {bottom : 0;}
+					}
+				}
+			}
+			@if(map-has-key($map, bottom) and map-has-key($map, right)){
+				@if(map-get($map, bottom) >= map-get($map, right)){
+					@media (max-width: map-get($map, bottom)) {
+						.sk-left-nav {bottom : 0;}
+						.sk-right-nav {bottom : 0;}
+					}
+				}
+			}
+
 		}
 
 		@if(type-of($__skeleton-until-navs__) == map or
