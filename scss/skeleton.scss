@@ -232,20 +232,24 @@ $positions : (
 			}
 		}
 
+		// ^ = ohne hütchen wenn nur static
+		// ^ = mit hütchen wenn static::until(...
+		// das ganze mit hütchen nach create-media-queries auslagern?!?!?!
+
 		@each $item in left, right {
 			@each $align in default, static, front {
 				// >>> wenn nur an der linken oder rechten navi data-sk-float angeben wurde
-				.sk-top-nav[data-sk-align="#{$align}"][data-sk-opt-float="#{$item}"] {
+				.sk-top-nav[data-sk-align^="#{$align}"][data-sk-opt-float="#{$item}"] {
 					#{$item} : map-get($positions, $item);
 				}
-				.sk-bottom-nav[data-sk-align="#{$align}"][data-sk-opt-float="#{$item}"] {
+				.sk-bottom-nav[data-sk-align^="#{$align}"][data-sk-opt-float="#{$item}"] {
 					#{$item} : map-get($positions, $item);
 				}
 				// >>> wenn auf linker und rechter navi data-sk-float angegen wurde
-				.sk-top-nav[data-sk-align="#{$align}"][data-sk-opt-float="left,right"] {
+				.sk-top-nav[data-sk-align^="#{$align}"][data-sk-opt-float="left,right"] {
 					left: map-get($positions, left); right: map-get($positions, right);
 				}
-				.sk-bottom-nav[data-sk-align="#{$align}"][data-sk-opt-float="left,right"] {
+				.sk-bottom-nav[data-sk-align^="#{$align}"][data-sk-opt-float="left,right"] {
 					left: map-get($positions, left); right: map-get($positions, right);
 				}
 			}
@@ -291,7 +295,7 @@ $positions : (
 			// >>> static mit der z Achse vorziehen!
 
 			[data-sk-align="static"] { z-index: 10; }
-			[data-sk-align="default"], [data-sk-align="front"] { z-index:  9; }
+			[data-sk-align="default"], [data-sk-align="front"] { z-index:  9; }ƒ
 
 			// >>> wenn top-navi oder bottom-navi default ist und linke oder rechte navi static,
 			// dann muss linker/rechter navi top:0, bottom:0 gesetzt werden
@@ -362,6 +366,7 @@ $positions : (
 
 				@debug $navigation;
 
+				//nur until
 				.sk-#{$navigation}-nav[data-sk-align^="static:until"]{
 					#{$navigation} : 0;
 				}

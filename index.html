@@ -32,9 +32,6 @@
         todo: wenn static:until({n}px) und data-sk-float gibt es probleme!
         todo: wenn top-nav=outside und bottom-nav=outside, problem!
 
-        todo: wenn top oder bottom navi grösser(until) left oder right,
-        dann muss z.B. bei top größer, linke und rechte navi top: 0px werden
-
         todo: wenn oben oder untere navigation nicht im quellcode, dann
         passt sich die seite nicht an! lösung: wenn oben oder unte nicht angegeben,
         dann linke/content/rechte navi z.B. attr=.sk-left-nav[data-top-nav-not-exists]
@@ -44,16 +41,16 @@
     -->
 
     <div id="skeleton">
-        <div class="sk-top-nav" data-sk-align="static:until(800px)">
+        <div class="sk-top-nav" data-sk-align="static:until(500px)">
             =top=
         </div>
-        <div class="sk-left-nav" data-sk-align="static:until(600px)">
+        <div class="sk-left-nav" data-sk-align="static:until(800px)" data-sk-float>
             =left=
         </div>
         <div class="sk-content">
             =content=
         </div>
-        <div class="sk-right-nav" data-sk-align="static:until(410px)">
+        <div class="sk-right-nav" data-sk-align="static:until(950px)" data-sk-float>
             =right=
         </div>
         <div class="sk-bottom-nav" data-sk-align="static:until(700px)">
