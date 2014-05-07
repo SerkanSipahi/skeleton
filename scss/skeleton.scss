@@ -28,7 +28,7 @@
 	.sk-right-nav,
 	.sk-bottom-nav,
 	.sk-content {
-		@include transition(all 250ms ease-in);
+		@include transition(all 250ms ease-in-out);
 	}
 };
 
@@ -39,13 +39,12 @@ body, html {
 
 $core-main-wrapper-x   : 1500px !default; // > width
 $core-left-nav-x       :  300px !default; // > width
-$core-right-nav-x      :   80px !default; // > width
+$core-right-nav-x      :  300px !default; // > width
 $core-top-nav-x        :   50px !default; // > height
 $core-bottom-nav-x     :  100px !default; // > height
 $core-gutter           :   10px !default;
 
 $core-first-breakpoint : 1024 !default;
-$core-breakpoints : ( 1024px 951px, 950px 481px, 480px 351px, 350px 280px);
 
 $positions : (
 	left   : $core-left-nav-x,
@@ -232,24 +231,20 @@ $positions : (
 			}
 		}
 
-		// ^ = ohne hütchen wenn nur static
-		// ^ = mit hütchen wenn static::until(...
-		// das ganze mit hütchen nach create-media-queries auslagern?!?!?!
-
 		@each $item in left, right {
 			@each $align in default, static, front {
 				// >>> wenn nur an der linken oder rechten navi data-sk-float angeben wurde
-				.sk-top-nav[data-sk-align^="#{$align}"][data-sk-opt-float="#{$item}"] {
+				.sk-top-nav[data-sk-align="#{$align}"][data-sk-opt-float="#{$item}"] {
 					#{$item} : map-get($positions, $item);
 				}
-				.sk-bottom-nav[data-sk-align^="#{$align}"][data-sk-opt-float="#{$item}"] {
+				.sk-bottom-nav[data-sk-align="#{$align}"][data-sk-opt-float="#{$item}"] {
 					#{$item} : map-get($positions, $item);
 				}
 				// >>> wenn auf linker und rechter navi data-sk-float angegen wurde
-				.sk-top-nav[data-sk-align^="#{$align}"][data-sk-opt-float="left,right"] {
+				.sk-top-nav[data-sk-align="#{$align}"][data-sk-opt-float="left,right"] {
 					left: map-get($positions, left); right: map-get($positions, right);
 				}
-				.sk-bottom-nav[data-sk-align^="#{$align}"][data-sk-opt-float="left,right"] {
+				.sk-bottom-nav[data-sk-align="#{$align}"][data-sk-opt-float="left,right"] {
 					left: map-get($positions, left); right: map-get($positions, right);
 				}
 			}
@@ -295,7 +290,7 @@ $positions : (
 			// >>> static mit der z Achse vorziehen!
 
 			[data-sk-align="static"] { z-index: 10; }
-			[data-sk-align="default"], [data-sk-align="front"] { z-index:  9; }ƒ
+			[data-sk-align="default"], [data-sk-align="front"] { z-index:  9; }
 
 			// >>> wenn top-navi oder bottom-navi default ist und linke oder rechte navi static,
 			// dann muss linker/rechter navi top:0, bottom:0 gesetzt werden
@@ -312,59 +307,17 @@ $positions : (
 		}
 
 		// > static:until(n)
-		$__skeleton-until-navs__ : __skeleton-until-navs__;
+		$__skeleton-until-navs__ : __skeleton-until-navs__; // kann rausgeschmissen werden, auch aus grunt task
 		$__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 
-		@debug $__skeleton-until-navs__;
 		@debug $__skeleton-until-navs-as-hash__;
 
-		// > special untils ( if top or bottom greater than left or right nav),
-		@if(type-of($__skeleton-until-navs-as-hash__) == map){
-
-			$map : $__skeleton-until-navs-as-hash__;
-
-			@if(map-has-key($map, top) and map-has-key($map, left)){
-				@if(map-get($map, top) >= map-get($map, left)){
-					@media (max-width: map-get($map, top)) {
-						.sk-left-nav {top : 0;}
-						.sk-right-nav {top : 0;}
-					}
-				}
-			}
-			@if(map-has-key($map, top) and map-has-key($map, right)){
-				@if(map-get($map, top) >= map-get($map, right)){
-					@media (max-width: map-get($map, top)) {
-						.sk-left-nav {top : 0;}
-						.sk-right-nav {top : 0;}
-					}
-				}
-			}
-			@if(map-has-key($map, bottom) and map-has-key($map, left)){
-				@if(map-get($map, bottom) >= map-get($map, left)){
-					@media (max-width: map-get($map, bottom)) {
-						.sk-left-nav {bottom : 0;}
-						.sk-right-nav {bottom : 0;}
-					}
-				}
-			}
-			@if(map-has-key($map, bottom) and map-has-key($map, right)){
-				@if(map-get($map, bottom) >= map-get($map, right)){
-					@media (max-width: map-get($map, bottom)) {
-						.sk-left-nav {bottom : 0;}
-						.sk-right-nav {bottom : 0;}
-					}
-				}
-			}
-
-		}
-
-		@if(type-of($__skeleton-until-navs__) == map or
-			type-of($__skeleton-until-navs__) == list){
+		@if(type-of($__skeleton-until-navs-as-hash__) == map or
+			type-of($__skeleton-until-navs-as-hash__) == list){
 
 			// > default untils
-			@each $navigation, $size in $__skeleton-until-navs__ {
+			@each $navigation, $size in $__skeleton-until-navs-as-hash__ {
 
-				@debug $navigation;
 
 				//nur until
 				.sk-#{$navigation}-nav[data-sk-align^="static:until"]{
@@ -376,6 +329,91 @@ $positions : (
 					.sk-#{$navigation}-nav[data-sk-align^="static:until"][data-sk-float]{
 						top : 0; bottom: 0;
 					}
+
+					$map : $__skeleton-until-navs-as-hash__;
+
+
+				    //if right > ( top or bottom ) {
+					//	@media max == right width {
+					//		.top-nav, .bottom-nav {
+					//			right : 0px
+					//		}
+					//	}
+					//}
+
+					@if( map-has-key($map, right) and map-has-key($map, top) ) {
+
+						$right : map-get($map, right);
+						$top   : map-get($map, top);
+
+						@if $right > $top {
+							@media (max-width: $right - 1) {
+								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; right : 0 !important; }
+							}
+						}
+
+					} @else if(map-has-key($map, right) and map-has-key($map, bottom)){
+
+						$right  : map-get($map, right);
+						$bottom : map-get($map, bottom);
+
+						@if $right > $bottom {
+							@media (max-width: $right - 1) {
+								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; right : 0 !important; }
+							}
+						}
+					}
+
+				    //if left > ( top or bottom ) {
+					//	@media max == left width {
+					//		.top-nav, .bottom-nav {
+					//			left : 0px
+					//		}
+					//	}
+					//}
+
+					@if( map-has-key($map, left) and map-has-key($map, top) ) {
+
+						$left : map-get($map, left);
+						$top  : map-get($map, top);
+
+						@if $left > $top {
+							@media (max-width: $left - 1) {
+								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; left : 0 !important; }
+							}
+						}
+
+					} @else if(map-has-key($map, left) and map-has-key($map, bottom)){
+
+						$left   : map-get($map, left);
+						$bottom : map-get($map, bottom);
+
+						@if $left > $bottom {
+							@media (max-width: $left - 1) {
+								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; left : 0 !important; }
+							}
+						}
+					}
+
+
+					// > wird benötigt damit data-sk-float auch bei static werten seinen float platz einnimmt!
+					@each $item in left, right {
+						// >>> wenn nur an der linken oder rechten navi data-sk-float angeben wurde
+						.sk-top-nav[data-sk-align^="static"][data-sk-opt-float="#{$item}"] {
+							#{$item} : map-get($positions, $item);
+						}
+						.sk-bottom-nav[data-sk-align^="static"][data-sk-opt-float="#{$item}"] {
+							#{$item} : map-get($positions, $item);
+						}
+						// >>> wenn auf linker und rechter navi data-sk-float angegen wurde
+						.sk-top-nav[data-sk-align^="static"][data-sk-opt-float="left,right"] {
+							left: map-get($positions, left); right: map-get($positions, right);
+						}
+						.sk-bottom-nav[data-sk-align^="static"][data-sk-opt-float="left,right"] {
+							left: map-get($positions, left); right: map-get($positions, right);
+						}
+					}
+
 				}
 
 				@media (min-width: $size) {
@@ -389,6 +427,28 @@ $positions : (
 					}
 				}
 			}
+		}
+
+		// > special untils ( if top or bottom greater than left or right nav),
+		@if(type-of($__skeleton-until-navs-as-hash__) == map){
+
+			$map : $__skeleton-until-navs-as-hash__;
+
+			@each  $horizontal-nav in top, bottom {
+				@each $vertical-nav in left, right {
+
+					@if(map-has-key($map, $horizontal-nav) and map-has-key($map, $vertical-nav)){
+						@if(map-get($map, $horizontal-nav) >= map-get($map, $vertical-nav)){
+							@media (max-width: map-get($map, $horizontal-nav)) {
+								.sk-left-nav {#{$horizontal-nav} : 0;}
+								.sk-right-nav {#{$horizontal-nav} : 0;}
+							}
+						}
+					}
+
+				}
+			}
+
 		}
 
 	}

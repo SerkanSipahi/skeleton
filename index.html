@@ -24,14 +24,6 @@
         left-nav=align-left, right-nav=align-right auch nur outside angegeben werden
         können.
 
-        info: - 1.) erst linke und rechte navi verschwinden lassen, und dann anschliessend
-              top und bottom navi ! oder erst top/bottom navi und dann linke/rechte navi
-              - 2.) erst top navi, dann linke und rechte navi, und dann bottom
-
-
-        todo: wenn static:until({n}px) und data-sk-float gibt es probleme!
-        todo: wenn top-nav=outside und bottom-nav=outside, problem!
-
         todo: wenn oben oder untere navigation nicht im quellcode, dann
         passt sich die seite nicht an! lösung: wenn oben oder unte nicht angegeben,
         dann linke/content/rechte navi z.B. attr=.sk-left-nav[data-top-nav-not-exists]
@@ -50,10 +42,10 @@
         <div class="sk-content">
             =content=
         </div>
-        <div class="sk-right-nav" data-sk-align="static:until(950px)" data-sk-float>
+        <div class="sk-right-nav" data-sk-align="back">
             =right=
         </div>
-        <div class="sk-bottom-nav" data-sk-align="static:until(700px)">
+        <div class="sk-bottom-nav" data-sk-align="back">
             =bottom=
         </div>
     </div>
