@@ -12,40 +12,20 @@
     </script>
 </head>
 <body>
-
-    <!--
-
-        Idee: der user kann entscheiden ob das menu komplett ausfahren(dektop/tablet/mobile)/einfahren soll
-
-        todo: wenn data-sk-align nicht angegeben dann,
-        ist data-sk-align="default" default!
-
-        todo: man sollte auch statt top-nav=align-top, bottom-nav=align-bottom,
-        left-nav=align-left, right-nav=align-right auch nur outside angegeben werden
-        können.
-
-        todo: wenn oben oder untere navigation nicht im quellcode, dann
-        passt sich die seite nicht an! lösung: wenn oben oder unte nicht angegeben,
-        dann linke/content/rechte navi z.B. attr=.sk-left-nav[data-top-nav-not-exists]
-
-        todo: menu Einstellungen: offcanvas, flyout, fadein
-        outside:offcanvas(ease-in-out), back:fadein(ease-out)
-    -->
-
     <div id="skeleton">
         <div class="sk-top-nav" data-sk-align="static:until(500px)">
             =top=
         </div>
-        <div class="sk-left-nav" data-sk-align="static:until(800px)" data-sk-float>
+        <div class="sk-left-nav" data-sk-align="static:until(800px)">
             =left=
         </div>
         <div class="sk-content">
             =content=
         </div>
-        <div class="sk-right-nav" data-sk-align="back">
+        <div class="sk-right-nav" data-sk-align="static:until(1000px)">
             =right=
         </div>
-        <div class="sk-bottom-nav" data-sk-align="back">
+        <div class="sk-bottom-nav" data-sk-align="static:until(900px)">
             =bottom=
         </div>
     </div>

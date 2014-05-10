@@ -115,6 +115,7 @@ var Skeleton = (function(document, window, undefined){
                     floatSettingContainer.push( z===0 ? 'left' : 'right');
                 }
             }
+
             if(floatSettingContainer.length){
                 skTop[0].setAttribute('data-sk-opt-float', floatSettingContainer.join(','));
                 skBottom[0].setAttribute('data-sk-opt-float', floatSettingContainer.join(','));
@@ -149,15 +150,6 @@ var Skeleton = (function(document, window, undefined){
             }
 
 
-
-        },
-        openLeftNav : function(){
-
-        },
-        closeLeftNav : function(){
-
-        },
-        toggleLeftNav : function(){
 
         }
     };

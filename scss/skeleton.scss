@@ -117,6 +117,9 @@ $positions : (
 		top     : if($core-top-nav-x != 0px, $core-top-nav-x, 0);
 		bottom  : if($core-bottom-nav-x != 0px, $core-bottom-nav-x, 0);;
 	}
+
+	// todo: createCoreSkWallPositions, createCoreSkContentPositions zusammenführen!
+
 	@mixin createCoreSkWallPositions($position, $align, $width){
 
 		// > here the outer wall( navs--> left, right, top, bottom )
@@ -157,6 +160,8 @@ $positions : (
 		// if >>> default/static/back/front
 		} @else {
 
+			@debug createCoreSkWallPositions-else $align;
+
 			.sk-#{$position}-nav[data-sk-align="#{$align}"] {
 				#{$position} : 0;
 
@@ -186,8 +191,8 @@ $positions : (
 		//   .sk-content[data-sk-left-opt="top"]     { $position : 0; }
 		//   .sk-content[data-sk-left-opt="bottom"]  { $position : 0; }
 
-
-		.sk-content[data-sk-#{$position}-opt="#{$align}"] {
+		.sk-content[data-sk-#{$position}-opt="#{$align}"],
+		.sk-content[data-sk-#{$position}-opt="outside"]{
 			@if($align != default and $align != static and $align){
 				#{$position} : 0;
 			} @else {
@@ -232,7 +237,7 @@ $positions : (
 		}
 
 		@each $item in left, right {
-			@each $align in default, static, front {
+			@each $align in default, static, front, back {
 				// >>> wenn nur an der linken oder rechten navi data-sk-float angeben wurde
 				.sk-top-nav[data-sk-align="#{$align}"][data-sk-opt-float="#{$item}"] {
 					#{$item} : map-get($positions, $item);
@@ -348,7 +353,10 @@ $positions : (
 
 						@if $right > $top {
 							@media (max-width: $right - 1) {
-								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; right : 0 !important; }
+								.sk-top-nav[data-sk-opt-float],
+								.sk-bottom-nav[data-sk-opt-float] {
+									z-index: 11 !important; right : 0 !important;
+								}
 							}
 						}
 
@@ -359,7 +367,10 @@ $positions : (
 
 						@if $right > $bottom {
 							@media (max-width: $right - 1) {
-								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; right : 0 !important; }
+								.sk-top-nav[data-sk-opt-float],
+								.sk-bottom-nav[data-sk-opt-float] {
+									z-index: 11 !important; right : 0 !important;
+								}
 							}
 						}
 					}
@@ -379,7 +390,10 @@ $positions : (
 
 						@if $left > $top {
 							@media (max-width: $left - 1) {
-								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; left : 0 !important; }
+								.sk-top-nav[data-sk-opt-float],
+								.sk-bottom-nav[data-sk-opt-float] {
+									z-index: 11 !important; left : 0 !important;
+								}
 							}
 						}
 
@@ -390,7 +404,10 @@ $positions : (
 
 						@if $left > $bottom {
 							@media (max-width: $left - 1) {
-								.sk-top-nav, .sk-bottom-nav { z-index: 11 !important; left : 0 !important; }
+								.sk-top-nav[data-sk-opt-float],
+								.sk-bottom-nav[data-sk-opt-float] {
+									z-index: 11 !important; left : 0 !important;
+								}
 							}
 						}
 					}
