@@ -77,6 +77,13 @@ module.exports = function(grunt) {
                 'skeleton.min.js'
             ]
         },
+        cssmin: {
+            combine: {
+                files: {
+                    './skeleton.min.css': ['./skeleton.css']
+                }
+            }
+        },
         scsslint: {
             allFiles: [
                 'scss/skeleton.scss'
@@ -95,14 +102,14 @@ module.exports = function(grunt) {
             },
             sass : {
                 files: ['scss/*.scss', 'tests/*.scss'],
-                tasks: ['skeleton:until', 'sass'/*, 'scsslint'*/, 'bootcamp'],
+                tasks: ['skeleton:until', 'sass'/*, 'scsslint'*/,'cssmin', 'bootcamp'],
                 options : {
                     livereload : false
                 }
             },
             html : {
                 files: ['index.html'],
-                tasks: ['skeleton:until', 'sass'/*, 'scsslint'*/, 'bootcamp'],
+                tasks: ['skeleton:until', 'sass'/*, 'scsslint'*/,'cssmin', 'bootcamp'],
                 options : {
                     livereload : false
                 }
@@ -227,15 +234,17 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-bower-install-simple');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-scss-lint');
+    grunt.loadNpmTasks('grunt-uncss');
     grunt.loadNpmTasks('bootcamp');
 
-    grunt.registerTask('default', ['jshint', 'skeleton:until', 'sass', /*'scsslint',*/ 'bootcamp', 'watch']);
+    grunt.registerTask('default', ['jshint', 'skeleton:until', 'sass', 'cssmin', /*'scsslint',*/ 'bootcamp', 'watch']);
     grunt.registerTask('bower', [
         'clean:bower',
         'bower-install-simple',
