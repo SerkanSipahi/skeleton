@@ -61,14 +61,13 @@ var Skeleton = (function(document, window, undefined){
 
             // wenn nichts angegeben dann auf data-sk-align="default setzen"
             // funktionisert nur wenn sieh unten functionen einen freshen domnode(sk-navs ziehen)
-            /*
+
             for(var n=0; n<4; n++){
                 res = navContainer[n].getAttribute('data-sk-align');
                 if(res===null){
-                    navContainer[n].setAttribute('data-sk-align', 'default');
+                    //navContainer[n].setAttribute('data-sk-align', 'default');
                 }
             }
-            */
 
             // > get all(left,right,top,bottom) algin settings and
             // add them sk-content e.g. data-sk-top-opt="back"
@@ -105,6 +104,8 @@ var Skeleton = (function(document, window, undefined){
                     }
                 }
             }
+
+            // *** relatedTo->(2) skeleton.scss ***
 
             // create float-contents
             var floatSettingContainer = [], align;

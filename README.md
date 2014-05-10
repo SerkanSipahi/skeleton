@@ -16,6 +16,8 @@ dann linke/content/rechte navi z.B. attr=.sk-left-nav[data-top-nav-not-exists]
 todo: menu Einstellungen: offcanvas, flyout, fadein
 outside:offcanvas(ease-in-out), back:fadein(ease-out)
 
+@todo: wenn: data-sk-align nicht angegeben dann ist es immer data-sk-align="default"
+
 idee
 ==============
 data-sk-height, data-sk-width

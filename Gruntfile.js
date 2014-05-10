@@ -191,26 +191,21 @@ module.exports = function(grunt) {
 
                 tasks.done(function(){
 
-                    var __skeleton_until_navs__,
-                        __skeleton_until_as_hash__,
-                        tmpContainer = [], tmpContainerHash=[];
+                    var __skeleton_until_as_hash__,
+                        tmpContainerHash=[];
 
                     if(matched.length===1){
-                        __skeleton_until_navs__ = '('+matched[0].join(' ').replace(' ', ' : ')+')';
-                        __skeleton_until_as_hash__ = __skeleton_until_navs__;
+                        __skeleton_until_as_hash__ = '('+matched[0].join(' ').replace(' ', ' : ')+')';
                     } else {
                         matched.forEach(function(element){
-                            tmpContainer.push(element.join(' '));
                             tmpContainerHash.push(element.join(' : '));
                         });
-                        __skeleton_until_navs__ = tmpContainer.join(', ');
                         __skeleton_until_as_hash__ = '( '+tmpContainerHash.join(', ')+ ' )';
                     }
 
                     if(matched.length){
-                        sk_scss_data = sk_scss_data.replace(/[^$](__skeleton-until-navs__|__skeleton-until-navs-as-hash__)/gmi, function(match, p1){
+                        sk_scss_data = sk_scss_data.replace(/[^$](__skeleton-until-navs-as-hash__)/gmi, function(match, p1){
                             var res = '';
-                            p1==='__skeleton-until-navs__' ? res = __skeleton_until_navs__ : null;
                             p1==='__skeleton-until-navs-as-hash__' ? res = __skeleton_until_as_hash__ : null;
                             return res;
                         });
