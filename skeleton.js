@@ -58,7 +58,7 @@ var $ = null,
 
         if(attr===void(0)) { throw { name : 'MissingArgument', message : 'Missing first Argument!' }; }
 
-        var res = null, computedStyle = null, tmpAttr = attr;
+        var res = null, tmpAttr = attr;
         if((capital = /-([a-z])/g.exec(attr))){
             attr = attr.replace(capital[0], capital[1].toUpperCase());
         }
@@ -67,15 +67,28 @@ var $ = null,
         } else if(attr && !value){
             res = this.style[attr];
             if(res===''){
-                computedStyle = window.getComputedStyle(this);
-                res = computedStyle.getPropertyValue(tmpAttr);
+                res = window.getComputedStyle(this).getPropertyValue(tmpAttr);
             }
         }
         return res;
     };
 
-    // > map querySelectorAll to $find and $
-    $ =  Element.prototype.find = document.querySelectorAll.bind(document);
+    // > Remove Element from DomTree
+    Element.prototype.remove = function(){
+        this.parentNode.removeChild(this);
+    };
+    NodeList.prototype.remove =
+    HTMLCollection.prototype.remove = function(){
+        this.each(function(){ this.remove(); });
+    };
+
+    // > map querySelectorAll to $
+    $ = document.querySelectorAll.bind(document);
+
+    // > find children of Element
+    Element.prototype.find = function(selector){
+        return this.querySelectorAll(selector);
+    };
 
 }());
 
@@ -104,6 +117,7 @@ var Skeleton = (function(document, window, undefined){
             this._ns+'-right-nav',
             this._ns+'-bottom-nav'
         ];
+        this._customMenus = null;
 
         this.skNavs     = null;
         this.skContent  = null;
@@ -130,7 +144,12 @@ var Skeleton = (function(document, window, undefined){
 
         init : function(){
             this._createContentDatasets();
-            this._alignCustomMenus();
+            /////////////////////////////
+            this._saveCustomMenus();
+            this._removeCustomMenusFromDomTree();
+            this._addPreparedCustomMenusToDom();
+
+            console.log(this._customMenus);
 
         },
 
@@ -152,26 +171,57 @@ var Skeleton = (function(document, window, undefined){
          *    top    : ...
          *    bottom : ...
          * }
+         *
+         * >> read operation
+         *
          **/
         _getCustomMenus : function(){
 
-            var tmpContainer = {};
+            var tmpContainer = {}, $element = null, $customMenus = null,
+                positionCirle = ['top', 'right', 'bottom', 'left'];
+
             this._coreMenus.each(function(key, element){
-                $(element).get(0).find('.sk-custom-menu').each(function(key, $customMenu){
+                $element = $(element).get(0);
+                $customMenus = $element.find('.sk-custom-menu');
+
+                if($customMenus.length){
+                    element = element.replace(/(\.sk-)(.*?)(-nav)/gi, function(match, p1,p2,p3){
+                        if(p1||p3) {return p2;}
+                    });
                     if(!tmpContainer[element]){
                         tmpContainer[element] = {};
                         tmpContainer[element].positions = [];
                         tmpContainer[element].customMenus  = [];
                     }
-
-                });
+                    positionCirle.each(function(key, value){
+                        tmpContainer[element].positions.push(
+                            $element.css(value)
+                        );
+                    });
+                    $customMenus.each(function(){
+                        tmpContainer[element].customMenus.push(this);
+                    });
+                }
             });
 
             return tmpContainer;
         },
-        _alignCustomMenus : function(){
-            var customMenus = this._getCustomMenus();
-            console.log(customMenus);
+        _saveCustomMenus : function(){
+            this._customMenus = this._getCustomMenus();
+        },
+        /*
+         * Die Custom-Menüs innerhalb der Core-Navigation können entfernt werden, weil
+         * wir Sie(domNodes) bereits mit _initCustomMenus in einem Object gespeichert werden!
+         *
+         * >> read/write operation
+         **/
+        _removeCustomMenusFromDomTree : function(){
+            this._coreMenus.each(function(key, element){
+                $(element).get(0).find('.sk-custom-menu').remove();
+            });
+        },
+        _addPreparedCustomMenusToDom : function(){
+
         },
         /************************************************/
 
