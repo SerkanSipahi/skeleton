@@ -24,7 +24,7 @@ var $ = null,
     window.onerror = function errorHandler(message, url, line){
         console.log('onerror', arguments);
     };
-    // > $for loop
+    // > for loop
     Window.prototype.for = function(callback){
 
         if (this === void 0 || this === null) { throw new TypeError(); }
@@ -39,14 +39,20 @@ var $ = null,
         }
     };
 
-    // > $each loop
+    // > each loop
     Array.prototype.each =
     NodeList.prototype.each =
     HTMLCollection.prototype.each = function(callback){
         Window.prototype.for.call(this, callback);
     };
+    Object.prototype.each = function(callback){
+        for(var item in this){
+            if(!this.hasOwnProperty(item)) { continue; }
+            callback.call(this, item, this[item]);
+        }
+    };
 
-    // > $get(index)
+    // > get(index)
     Array.prototype.get =
     NodeList.prototype.get =
     HTMLCollection.prototype.get = function(index){
@@ -65,8 +71,7 @@ var $ = null,
         if(attr && value){
             res = this; this.style[attr] = value;
         } else if(attr && !value){
-            res = this.style[attr];
-            if(res===''){
+            if(this.style[attr]===''){
                 res = window.getComputedStyle(this).getPropertyValue(tmpAttr);
             }
         }
@@ -147,10 +152,7 @@ var Skeleton = (function(document, window, undefined){
             /////////////////////////////
             this._saveCustomMenus();
             this._removeCustomMenusFromDomTree();
-            this._addPreparedCustomMenusToDom();
-
-            console.log(this._customMenus);
-
+            this._buildStyleSheetForCustomMenus();
         },
 
         // >> private methods
@@ -194,9 +196,7 @@ var Skeleton = (function(document, window, undefined){
                         tmpContainer[element].customMenus  = [];
                     }
                     positionCirle.each(function(key, value){
-                        tmpContainer[element].positions.push(
-                            $element.css(value)
-                        );
+                        tmpContainer[element].positions.push( $element.css(value) );
                     });
                     $customMenus.each(function(){
                         tmpContainer[element].customMenus.push(this);
@@ -220,8 +220,30 @@ var Skeleton = (function(document, window, undefined){
                 $(element).get(0).find('.sk-custom-menu').remove();
             });
         },
-        _addPreparedCustomMenusToDom : function(){
+        _buildStyleSheetForCustomMenus : function(){
 
+            var styleElement = document.createElement('style'), sheet=null, nl=null;
+                styleElement.id = 'sk-stylesheet';
+                nl = function(str){ return str+'\n';};
+
+            document.head.appendChild(styleElement);
+            sheet = styleElement.sheet ? styleElement.sheet : styleElement.styleSheet;
+
+            sheet.insertRule(nl('body { background-color: blue }'), sheet.cssRules.length);
+            sheet.insertRule(nl('body { font-size: 20px }'), sheet.cssRules.length);
+
+            this._customMenus.each(function(key, value){
+                if(key==='top'){
+
+                } else if(key==='right'){
+
+                } else if(key==='bottom'){
+
+                } else if(key=== 'left'){
+
+                }
+            });
+            console.log(this._customMenus);
         },
         /************************************************/
 
