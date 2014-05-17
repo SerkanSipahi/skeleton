@@ -1,3 +1,84 @@
+
+//hybridjs
+
+var $ = null,
+    utility = null;
+
+(function(){
+
+    // > useful functions
+    // > write tests
+    utility = {
+        // > http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
+        rgbToHex : function(r, g, b) {
+            var match = null;
+            // > if we pass like this: 'rgb(255, 255, 255)'
+            if(typeof(r)==='string' && (match = /rgb\((\d+), (\d+), (\d+)\)/ig.exec(r))){
+                r=~~match[1], g=~~match[2], b=~~match[3];
+            }
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+    };
+
+    // > global error handling
+    window.onerror = function errorHandler(message, url, line){
+        console.log('onerror', arguments);
+    };
+    // > $for loop
+    Window.prototype.for = function(callback){
+
+        if (this === void 0 || this === null) { throw new TypeError(); }
+        var t = Object(this),
+            len = t.length >>> 0;
+
+        if (typeof callback !== 'function') { throw new TypeError(); }
+        for (var i = 0; i < len; i++){
+            if (i in t){
+                callback.call(t[i], i, t[i]);
+            }
+        }
+    };
+
+    // > $each loop
+    Array.prototype.each =
+    NodeList.prototype.each =
+    HTMLCollection.prototype.each = function(callback){
+        Window.prototype.for.call(this, callback);
+    };
+
+    // > $get(index)
+    Array.prototype.get =
+    NodeList.prototype.get =
+    HTMLCollection.prototype.get = function(index){
+        return this[index];
+    };
+
+    // > setter or getter .css()
+    Element.prototype.css = function(attr, value){
+
+        if(attr===void(0)) { throw { name : 'MissingArgument', message : 'Missing first Argument!' }; }
+
+        var res = null, computedStyle = null, tmpAttr = attr;
+        if((capital = /-([a-z])/g.exec(attr))){
+            attr = attr.replace(capital[0], capital[1].toUpperCase());
+        }
+        if(attr && value){
+            res = this; this.style[attr] = value;
+        } else if(attr && !value){
+            res = this.style[attr];
+            if(res===''){
+                computedStyle = window.getComputedStyle(this);
+                res = computedStyle.getPropertyValue(tmpAttr);
+            }
+        }
+        return res;
+    };
+
+    // > map querySelectorAll to $find and $
+    $ =  Element.prototype.find = document.querySelectorAll.bind(document);
+
+}());
+
 var Skeleton = (function(document, window, undefined){
 
     'use strict';
@@ -16,7 +97,14 @@ var Skeleton = (function(document, window, undefined){
     // > constructor
     function Skeleton(pluginDest){
 
-        this.namespaces = 'sk';
+        this._ns         = '.sk';
+        this._coreMenus  = [
+            this._ns+'-top-nav',
+            this._ns+'-left-nav',
+            this._ns+'-right-nav',
+            this._ns+'-bottom-nav'
+        ];
+
         this.skNavs     = null;
         this.skContent  = null;
         this.skLeft     = null;
@@ -31,21 +119,67 @@ var Skeleton = (function(document, window, undefined){
         // > check if element exists etc
         // make some checks here...
 
-        // > skeleton core
-        this.createContentDatasets();
+        this.init();
     }
 
     // > public methods
     Skeleton.prototype = {
 
-        initNavigtions : function(){
+
+        // >> public methods
+
+        init : function(){
+            this._createContentDatasets();
+            this._alignCustomMenus();
 
         },
+
+        // >> private methods
+        /*
+         * Liefert alle Custom-Menus zurück
+         *
+         * e.g. left.positions = positions der core navigation
+         *
+         * Object = {
+         *    left   : {
+         *      positions : [ left, right, top, bottom ],
+         *      customMenus  : [ domObject, domObject, domObject ]
+         *    }
+         *    right   : {
+         *      positions : [ left, right, top, bottom ],
+         *      customMenus  : [ domObject, domObject, domObject ]
+         *    }
+         *    top    : ...
+         *    bottom : ...
+         * }
+         **/
+        _getCustomMenus : function(){
+
+            var tmpContainer = {};
+            this._coreMenus.each(function(key, element){
+                $(element).get(0).find('.sk-custom-menu').each(function(key, $customMenu){
+                    if(!tmpContainer[element]){
+                        tmpContainer[element] = {};
+                        tmpContainer[element].positions = [];
+                        tmpContainer[element].customMenus  = [];
+                    }
+
+                });
+            });
+
+            return tmpContainer;
+        },
+        _alignCustomMenus : function(){
+            var customMenus = this._getCustomMenus();
+            console.log(customMenus);
+        },
+        /************************************************/
+
         /*
          * @todo: Documentation
          * @todo: move this method to privates
          **/
-        createContentDatasets : function(){
+        _createContentDatasets : function(){
 
             var skNavs       = _$(this.element+' [data-sk-align]'),
                 skContent    = _$(this.element+' .sk-content'),

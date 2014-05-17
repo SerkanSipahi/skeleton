@@ -1,9 +1,11 @@
 @charset "UTF-8";
 
-.overflow-hidden   { overflow : hidden; }
-.overflow-auto     { overflow : auto;  }
-.position-relative { position : relative ; }
-.position-absolute { position : absolute ; }
+.sk-overflow-hidden   { overflow : hidden; }
+.sk-overflow-auto     { overflow : auto;  }
+.sk-position-relative { position : relative ; }
+.sk-position-absolute { position : absolute ; }
+.sk-display-none      { display  : none; }
+.sk-display-block     { display  : block; }
 
 #skeleton {
 	.sk-left-nav,
@@ -11,18 +13,18 @@
 	.sk-right-nav,
 	.sk-bottom-nav,
 	.sk-content {
-		//@include transition(all 250ms ease-in-out);
+		@include transition(all 250ms ease-in-out);
 	}
 };
 
 body, html {
-  @extend .overflow-hidden;
+  @extend .sk-overflow-hidden;
   height : 100%;
 }
 
 $core-main-wrapper-x   : 1500px !default; // > width
 $core-left-nav-x       :  300px !default; // > width
-$core-right-nav-x      :  300px !default; // > width
+$core-right-nav-x      :  150px !default; // > width
 $core-top-nav-x        :   50px !default; // > height
 $core-bottom-nav-x     :  100px !default; // > height
 $core-gutter           :   10px !default;
@@ -44,8 +46,8 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
     // > debug color
     background-color: gray;
 
-    @extend .overflow-hidden;
-    @extend .position-relative;
+    @extend .sk-overflow-hidden;
+    @extend .sk-position-relative;
 
     margin     : 0 auto;
     max-width  : $core-main-wrapper-x;
@@ -55,8 +57,8 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
     // > common atrributes
 	.sk-left-nav {
 		background-color: green;
-		@extend .overflow-auto;
-		@extend .position-absolute;
+		@extend .sk-overflow-auto;
+		@extend .sk-position-absolute;
 		z-index : 10;
 		width   : $core-left-nav-x;
 		top     : if($core-top-nav-x != 0px, $core-top-nav-x, 0);
@@ -64,8 +66,8 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 	}
 	.sk-right-nav {
 		background-color: yellow;
-		@extend .overflow-auto;
-		@extend .position-absolute;
+		@extend .sk-overflow-auto;
+		@extend .sk-position-absolute;
 		z-index : 10;
 		width   : $core-right-nav-x;
 		top     : if($core-top-nav-x != 0px, $core-top-nav-x, 0);
@@ -73,8 +75,8 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 	}
     .sk-top-nav {
         background-color: red;
-        @extend .overflow-hidden;
-        @extend .position-absolute;
+        @extend .sk-overflow-hidden;
+        @extend .sk-position-absolute;
 	    z-index : 9;
 	    height  : $core-top-nav-x;
 	    left    : 0;
@@ -82,8 +84,8 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
     }
     .sk-bottom-nav {
         background-color: deeppink;
-        @extend .overflow-hidden;
-        @extend .position-absolute;
+        @extend .sk-overflow-hidden;
+        @extend .sk-position-absolute;
 	    z-index : 9;
 	    height  : $core-bottom-nav-x;
 	    left    : 0;
@@ -92,8 +94,8 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 	// > content area
 	.sk-content {
 		background-color: blue;
-		@extend .overflow-auto;
-		@extend .position-absolute;
+		@extend .sk-overflow-auto;
+		@extend .sk-position-absolute;
 		z-index : 20; // wenn z-index hier angepasst wird, z-index hier createCoreSkWallPositions nicht vergessen
 		// > if we havent left or right nav in dom,
 		//   this will be the default value of sk-content
@@ -419,4 +421,9 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 		}
 	}
 
+}
+
+// >>> Custom Menu default Settings
+.sk-custom-menu {
+	@extend .sk-display-none;
 }

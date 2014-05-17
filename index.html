@@ -8,6 +8,33 @@
     <script>
         domready(function () {
             var skeleton = new Skeleton('#skeleton');
+
+            /*
+             * toggleMenu, >> (string arg, function onFinish or { beforeStart, onFinish }
+             * openMenu,   >> (string arg, function onFinish or { beforeStart, onFinish }
+             * closeMenu,  >> (string arg, function onFinish or { beforeStart, onFinish }
+             * */
+
+            /*
+            skeleton.toggleMenu('left:offcanvas(ease-in-out)', function(e){
+                console.log(e);
+            });
+            skeleton.openMenu('left:flyout(ease-in-out)', function(e){
+                console.log(e);
+            });
+            skeleton.closeMenu('left:fadeIn(ease-in-out)', function(e){
+                console.log(e);
+            });
+            skeleton.toggleMenu('right:offcanvas(ease-in-out)', {
+                beforeStart : function(e){
+
+                },
+                onFinish : function(e){
+
+                }
+            });
+            */
+
         })
     </script>
 </head>
@@ -18,6 +45,24 @@
         </div>
         <div class="sk-left-nav" data-sk-align="static:until(800px)">
             =left=
+
+            <!-- Custom Menus innerhalb einer Navigation -->
+            <!--
+                1.) Wenn Custom-Menus innerhalb einer Hauptnavigation
+                    Navigation angegeben werden reichen folgende(siehe unten)
+                    Angaben völlig aus. Intern verarbeitet die Script diese Tags
+                    und verlagert sie nach außen wie bei #Custom Menus außerhalb#
+            -->
+            <div class="sk-custom-menu sk-menu-foo-1">
+
+            </div>
+            <div class="sk-custom-menu sk-menu-loo-1">
+
+            </div>
+            <div class="sk-custom-menu sk-menu-coo-1">
+
+            </div>
+            <!-- End Custom Menus -->
         </div>
         <div class="sk-content">
             =content=
@@ -27,7 +72,43 @@
         </div>
         <div class="sk-bottom-nav" data-sk-align="static:until(600px)">
             =bottom=
+            <!-- Start Custom Menus -->
+            <div class="sk-custom-menu sk-menu-foo-2">
+
+            </div>
+            <div class="sk-custom-menu sk-menu-loo-2">
+
+            </div>
+            <div class="sk-custom-menu sk-menu-coo-2">
+
+            </div>
+            <!-- End Custom Menus -->
         </div>
+
+        <!-- Custom Menus ausserhalb --->
+        <!--
+             1.) je nachdem wie left/right/top/bottom Navigation ausgerichtet ist,
+                 also wenn z.B. left-navi data-sk-align="default" ist dann nimmt
+                 das custoum menu automatisch seinen Abstand nach oben und unten ein!
+
+                 Die Breite bei left/right menus oder die höhe bei top/bottom
+                 kann vom user in der CSS-Datei angegeben werden.
+
+             2.) Standardmäßig sind alle sk-custom menus ausgeblendet.
+
+             3.) Alle Custom-Menüs sind outside ausgerichtet!
+        -->
+        <!--
+        <div class="sk-custom-menu sk-menu-foo" data-sk-related-to="left">
+
+        </div>
+        <div class="sk-custom-menu sk-menu-loo" data-sk-related-to="left">
+
+        </div>
+        <div class="sk-custom-menu sk-menu-coo" data-sk-related-to="left">
+
+        </div>
+        -->
     </div>
 </body>
 </html>
