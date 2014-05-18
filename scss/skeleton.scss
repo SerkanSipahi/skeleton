@@ -206,18 +206,24 @@ $__skeleton-until-navs-as-hash__ : __skeleton-until-navs-as-hash__;
 
 	// >>> left/right
 	.sk-left-nav[data-sk-top-opt="top"],
-	.sk-right-nav[data-sk-top-opt="top"]{
+	.sk-right-nav[data-sk-top-opt="top"],
+	.sk-left-nav[data-sk-top-opt="back"],
+	.sk-right-nav[data-sk-top-opt="back"],{
 		top: 0;
 	}
 	.sk-left-nav[data-sk-bottom-opt="bottom"],
-	.sk-right-nav[data-sk-bottom-opt="bottom"]{
+	.sk-right-nav[data-sk-bottom-opt="bottom"],
+	.sk-left-nav[data-sk-bottom-opt="back"],
+	.sk-right-nav[data-sk-bottom-opt="back"]{
 		bottom: 0;
 	}
 	// >>> content
-	.sk-content[data-sk-top-opt="top"]{
+	.sk-content[data-sk-top-opt="top"],
+	.sk-content[data-sk-top-opt="back"]{
 		top: 0;
 	}
-	.sk-content[data-sk-bottom-opt="bottom"]{
+	.sk-content[data-sk-bottom-opt="bottom"],
+	.sk-content[data-sk-bottom-opt="back"]{
 		bottom: 0;
 	}
 
