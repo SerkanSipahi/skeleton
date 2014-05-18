@@ -265,15 +265,12 @@ var Skeleton = (function(document, window, undefined){
         _buildStyleSheetForCustomMenus : function(){
 
             var styleElement = document.createElement('style'),
-                sheet=null, nl=null, self=this;
+                sheet=null, nl=null, self=this, cssRule='';
                 styleElement.id = 'sk-stylesheet';
                 nl = function(str){ return str+'\n';};
 
             document.head.appendChild(styleElement);
             sheet = styleElement.sheet ? styleElement.sheet : styleElement.styleSheet;
-
-            //sheet.insertRule(nl('body { background-color: blue }'), sheet.cssRules.length);
-            //sheet.insertRule(nl('body { font-size: 20px }'), sheet.cssRules.length);
 
             this._customMenus.each(function(align, object){
                 object.customMenus.each(function(key, domNode){
@@ -296,6 +293,8 @@ var Skeleton = (function(document, window, undefined){
                         default:
                             throw new Error();
                     }
+
+                    sheet.insertRule(nl('body { background-color: blue }'), sheet.cssRules.length);
                 });
             });
         },
