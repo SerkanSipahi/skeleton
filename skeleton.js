@@ -274,27 +274,28 @@ var Skeleton = (function(document, window, undefined){
 
             this._customMenus.each(function(align, object){
                 object.customMenus.each(function(key, domNode){
-                    var selector =  Array.prototype.slice.call(domNode.classList, 0).find(function(e,i,a){
+                    var positions = self._customMenus[align].positions,
+                        selector =  Array.prototype.slice.call(domNode.classList, 0).find(function(e,i,a){
                         if(/sk-menu-/gi.exec(e)){ return e; }
                     });
                     switch (align) {
                         case 'top':
-                            console.log(align, selector, self._customMenus[align].positions, domNode.css('height'), domNode);
+                            console.log(align, selector, positions, domNode.css('height'), domNode);
                             break;
                         case 'right':
-                            console.log(align, selector, self._customMenus[align].positions, domNode.css('width'), domNode);
+                            console.log(align, selector, positions, domNode.css('width'), domNode);
                             break;
                         case 'bottom':
-                            console.log(align, selector, self._customMenus[align].positions, domNode.css('height'), domNode);
+                            console.log(align, selector, positions, domNode.css('height'), domNode);
                             break;
                         case 'left':
-                            console.log(align, selector, self._customMenus[align].positions, domNode.css('width'), domNode);
+                            console.log(align, selector, positions, domNode.css('width'), domNode);
                             break;
                         default:
                             throw new Error();
                     }
 
-                    sheet.insertRule(nl('body { background-color: blue }'), sheet.cssRules.length);
+                    sheet.insertRule(nl('body { background-color: white; }'), sheet.cssRules.length);
                 });
             });
         },
