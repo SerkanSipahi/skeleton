@@ -18,7 +18,10 @@
 };
 
 // >>> Custom Menu default Settings
-.sk-custom-menu { @extend .sk-display-none; }
+.sk-custom-menu {
+	@extend .sk-display-none;
+	@extend .sk-position-absolute;
+}
 
 /*
  * Custom-Menus benötigen keine höhen Angaben bei left/right
@@ -26,13 +29,13 @@
  */
 // >>> Custom Menus //
 #skeleton {
-	.foo-1  { width: 200px; background-color: lighten(#000000, 10%); }
-	.lool-1 { width: 250px; background-color: lighten(#000000, 20%); }
-	.cool-1 { width: 300px; background-color: lighten(#000000, 30%); }
+	.sk-menu-foo-1  { width: 200px; background-color: lighten(#000000, 10%); }
+	.sk-menu-lool-1 { width: 250px; background-color: lighten(#000000, 20%); }
+	.sk-menu-cool-1 { width: 300px; background-color: lighten(#000000, 30%); }
 
-	.foo-2  { height:  50px; background-color: lighten(#000000, 40%); }
-	.lool-2 { height: 100px; background-color: lighten(#000000, 50%); }
-	.cool-2 { height: 150px; background-color: lighten(#000000, 60%); }
+	.sk-menu-foo-2  { height:  50px; background-color: lighten(#000000, 40%); }
+	.sk-menu-lool-2 { height: 100px; background-color: lighten(#000000, 50%); }
+	.sk-menu-cool-2 { height: 150px; background-color: lighten(#000000, 60%); }
 }
 /////////////////////
 

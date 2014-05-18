@@ -1,6 +1,41 @@
 
-//hybridjs
+// >>> Polyfills
+(function(){
 
+    // > Array find
+    if (!Array.prototype.find) {
+        Object.defineProperty(Array.prototype, 'find', {
+            enumerable: false,
+            configurable: true,
+            writable: true,
+            value: function(predicate) {
+                if (this == null) {
+                    throw new TypeError('Array.prototype.find called on null or undefined');
+                }
+                if (typeof predicate !== 'function') {
+                    throw new TypeError('predicate must be a function');
+                }
+                var list = Object(this),
+                    length = list.length >>> 0,
+                    thisArg = arguments[1],
+                    value;
+
+                for (var i = 0; i < length; i++) {
+                    if (i in list) {
+                        value = list[i];
+                        if (predicate.call(thisArg, value, i, list)) {
+                            return value;
+                        }
+                    }
+                }
+                return undefined;
+            }
+        });
+    }
+
+}());
+
+// >>> hybridjs
 var $ = null,
     utility = null;
 
@@ -60,6 +95,7 @@ var $ = null,
     };
 
     // > setter or getter .css()
+    // > todo: wenn getComputedStyle auch nichts liefert dann, aus css rules Werte holen
     Element.prototype.css = function(attr, value){
 
         if(attr===void(0)) { throw { name : 'MissingArgument', message : 'Missing first Argument!' }; }
@@ -151,8 +187,8 @@ var Skeleton = (function(document, window, undefined){
             this._createContentDatasets();
             /////////////////////////////
             this._saveCustomMenus();
-            this._removeCustomMenusFromDomTree();
             this._buildStyleSheetForCustomMenus();
+            this._removeCustomMenusFromDomTree();
         },
 
         // >> private methods
@@ -184,7 +220,7 @@ var Skeleton = (function(document, window, undefined){
 
             this._coreMenus.each(function(key, element){
                 $element = $(element).get(0);
-                $customMenus = $element.find('.sk-custom-menu');
+                $customMenus = $element.find('.sk-custom-element');
 
                 if($customMenus.length){
                     element = element.replace(/(\.sk-)(.*?)(-nav)/gi, function(match, p1,p2,p3){
@@ -203,47 +239,65 @@ var Skeleton = (function(document, window, undefined){
                     });
                 }
             });
-
+            console.log(tmpContainer);
             return tmpContainer;
         },
+        /*
+         * speichert die Custom-Menu Struktur
+         **/
         _saveCustomMenus : function(){
             this._customMenus = this._getCustomMenus();
         },
         /*
          * Die Custom-Menüs innerhalb der Core-Navigation können entfernt werden, weil
-         * wir Sie(domNodes) bereits mit _initCustomMenus in einem Object gespeichert werden!
+         * diese(domNodes) bereits mit _getCustomMenus in einem Object gespeichert werden!
          *
          * >> read/write operation
          **/
         _removeCustomMenusFromDomTree : function(){
             this._coreMenus.each(function(key, element){
-                $(element).get(0).find('.sk-custom-menu').remove();
+                $(element).get(0).find('.sk-custom-element').remove();
             });
         },
+        /*
+         *
+         **/
         _buildStyleSheetForCustomMenus : function(){
 
-            var styleElement = document.createElement('style'), sheet=null, nl=null;
+            var styleElement = document.createElement('style'),
+                sheet=null, nl=null, self=this;
                 styleElement.id = 'sk-stylesheet';
                 nl = function(str){ return str+'\n';};
 
             document.head.appendChild(styleElement);
             sheet = styleElement.sheet ? styleElement.sheet : styleElement.styleSheet;
 
-            sheet.insertRule(nl('body { background-color: blue }'), sheet.cssRules.length);
-            sheet.insertRule(nl('body { font-size: 20px }'), sheet.cssRules.length);
+            //sheet.insertRule(nl('body { background-color: blue }'), sheet.cssRules.length);
+            //sheet.insertRule(nl('body { font-size: 20px }'), sheet.cssRules.length);
 
-            this._customMenus.each(function(key, value){
-                if(key==='top'){
-
-                } else if(key==='right'){
-
-                } else if(key==='bottom'){
-
-                } else if(key=== 'left'){
-
-                }
+            this._customMenus.each(function(align, object){
+                object.customMenus.each(function(key, domNode){
+                    var selector =  Array.prototype.slice.call(domNode.classList, 0).find(function(e,i,a){
+                        if(/sk-menu-/gi.exec(e)){ return e; }
+                    });
+                    switch (align) {
+                        case 'top':
+                            console.log(align, selector, self._customMenus[align].positions, domNode.css('height'), domNode);
+                            break;
+                        case 'right':
+                            console.log(align, selector, self._customMenus[align].positions, domNode.css('width'), domNode);
+                            break;
+                        case 'bottom':
+                            console.log(align, selector, self._customMenus[align].positions, domNode.css('height'), domNode);
+                            break;
+                        case 'left':
+                            console.log(align, selector, self._customMenus[align].positions, domNode.css('width'), domNode);
+                            break;
+                        default:
+                            throw new Error();
+                    }
+                });
             });
-            console.log(this._customMenus);
         },
         /************************************************/
 

@@ -9,23 +9,23 @@
         domready(function () {
             var skeleton = new Skeleton('#skeleton');
 
-            /*
-             * toggleMenu, >> (string arg, function onFinish or { beforeStart, onFinish }
-             * openMenu,   >> (string arg, function onFinish or { beforeStart, onFinish }
-             * closeMenu,  >> (string arg, function onFinish or { beforeStart, onFinish }
-             * */
+           /*
+            * toggleMenu, >> (string arg, function onFinish or { beforeStart, onFinish }
+            * openMenu,   >> (string arg, function onFinish or { beforeStart, onFinish }
+            * closeMenu,  >> (string arg, function onFinish or { beforeStart, onFinish }
+            * */
 
             /*
-            skeleton.toggleMenu('left:offcanvas(ease-in-out)', function(e){
+            skeleton.toggle('.sk-left-nav:offcanvas(ease-in-out)', function(e){
                 console.log(e);
             });
-            skeleton.openMenu('left:flyout(ease-in-out)', function(e){
+            skeleton.open('left:flyout(ease-in-out)', function(e){
                 console.log(e);
             });
-            skeleton.closeMenu('left:fadeIn(ease-in-out)', function(e){
+            skeleton.close('left:fadeIn(ease-in-out)', function(e){
                 console.log(e);
             });
-            skeleton.toggleMenu('right:offcanvas(ease-in-out)', {
+            skeleton.toggle('right:offcanvas(ease-in-out)', {
                 beforeStart : function(e){
 
                 },
@@ -37,13 +37,17 @@
             skeleton.next('left:offcanvas(ease-in-out)', {
 
             });
-            skeleton.onCustomMenuFirst('left:offcanvas(ease-in-out)', function(){
+            skeleton.prev('left:offcanvas(ease-in-out)', {
 
             });
-            skeleton.onCustomMenuNext('left:offcanvas(ease-in-out)', function(){
+
+            skeleton.onFirst('left:offcanvas(ease-in-out)', function(){
 
             });
-            skeleton.onCustomMenuEnd('left:offcanvas(ease-in-out)', function(){
+            skeleton.onNext('left:offcanvas(ease-in-out)', function(){
+
+            });
+            skeleton.onEnd('left:offcanvas(ease-in-out)', function(){
 
             });
 
@@ -67,13 +71,13 @@
                     Angaben völlig aus. Intern verarbeitet die Script diese Tags
                     und verlagert sie nach außen wie bei #Custom Menus außerhalb#
             -->
-            <div class="sk-custom-menu foo-1">
+            <div class="sk-custom-element sk-menu-foo-1">
 
             </div>
-            <div class="sk-custom-menu lool-1">
+            <div class="sk-custom-element sk-menu-lool-1">
 
             </div>
-            <div class="sk-custom-menu cool-1">
+            <div class="sk-custom-element sk-menu-cool-1">
 
             </div>
             <!-- End Custom Menus -->
@@ -87,13 +91,13 @@
         <div class="sk-bottom-nav" data-sk-align="static:until(600px)">
             =bottom=
             <!-- Start Custom Menus -->
-            <div class="sk-custom-menu foo-2">
+            <div class="sk-custom-element sk-menu-foo-2">
 
             </div>
-            <div class="sk-custom-menu lool-2">
+            <div class="sk-custom-element sk-menu-lool-2">
 
             </div>
-            <div class="sk-custom-menu cool-2">
+            <div class="sk-custom-element sk-menu-cool-2">
 
             </div>
             <!-- End Custom Menus -->
