@@ -52,6 +52,9 @@ var $ = null,
                 r=~~match[1], g=~~match[2], b=~~match[3];
             }
             return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        },
+        is : function(type, object){
+            return Object.prototype.toString.call(object) === '[object '+type+']';
         }
     };
 
@@ -94,28 +97,76 @@ var $ = null,
         return this[index];
     };
 
-    // > setter or getter .css()
-    // > todo: wenn getComputedStyle auch nichts liefert dann, aus css rules Werte holen
-    Element.prototype.css = function(attr, value){
+    // >> durch is(siehe oben) ersetzten!
+    // >> start >> please copy this part for using css handle in your project
+    var isTypeof = function(type, object){
+        return Object.prototype.toString.call(object).toLowerCase() === '[object '+type+']';
+    };
 
-        if(attr===void(0)) { throw { name : 'MissingArgument', message : 'Missing first Argument!' }; }
-
-        var res = null, tmpAttr = attr;
-        if((capital = /-([a-z])/g.exec(attr))){
-            attr = attr.replace(capital[0], capital[1].toUpperCase());
+    Array.prototype.css =
+    NodeList.prototype.css =
+    HTMLCollection.prototype.css = function(){
+        var res;
+        for(var i=0,length=this.length;i<length;i++){
+            this[i].css.apply(this[i], arguments);
         }
-        if(attr && value){
-            res = this; this.style[attr] = value;
-        } else if(attr && !value){
-            if(this.style[attr]===''){
-                res = window.getComputedStyle(this).getPropertyValue(tmpAttr);
+    };
+
+    HTMLElement.prototype.css = function(){
+
+        var self     = this,
+            args     = arguments,
+            res      = null,
+            style    = null,
+            tmpObj   = {},
+            writeCss = function(self, cssObject){
+                for(var attr in cssObject){
+                    self.style[attr] = cssObject[attr];
+                }
+            },
+            stylesheetRuleToCamelCase = function(attr){
+                if((capital = /-([a-z])/g.exec(attr)) && !(!!window.chrome)){
+                    attr = attr.replace(capital[0], capital[1].toUpperCase());
+                }
+                return attr;
+            },
+            objectCollectionToCamelCase = function(cssObject){
+                var tmpCssObject={}, tmpAttr;
+                for(var attr in cssObject) {
+                    tmpCssObject[stylesheetRuleToCamelCase(attr)] = cssObject[attr];
+                }
+                return tmpCssObject;
+            };
+
+        // > write operations
+        if(isTypeof('string', args[0]) && isTypeof('string', args[1]) && !args[2]){
+            tmpObj[args[0]] = args[1];
+            writeCss(self, objectCollectionToCamelCase(tmpObj));
+        } else if(isTypeof('object', args[0]) && isTypeof('undefined', args[1])){
+            writeCss(self, objectCollectionToCamelCase(args[0]));
+        } else if(args[0] && args[1] && args[2]){
+            args[2].call(self, args[0], args[0]);
+        } else if(isTypeof('object', args[0]) && isTypeof('function', args[1])){
+            args[1].call(self, args[0]);
+        }
+
+        // > read operations
+        if(isTypeof('string', args[0]) && !args[1] && !args[2]){
+            style = self.style[stylesheetRuleToCamelCase(args[0])];
+            if(style!==''){
+                res = self.style[args[0]];
+            }
+            else if(style===''){
+                res = window.getComputedStyle(self).getPropertyValue(
+                    stylesheetRuleToCamelCase(args[0])
+                );
             }
         }
         return res;
     };
 
     // > Remove Element from DomTree
-    Element.prototype.remove = function(){
+    HTMLElement.prototype.remove = function(){
         this.parentNode.removeChild(this);
     };
     NodeList.prototype.remove =
@@ -127,7 +178,7 @@ var $ = null,
     $ = document.querySelectorAll.bind(document);
 
     // > find children of Element
-    Element.prototype.find = function(selector){
+    HTMLElement.prototype.find = function(selector){
         return this.querySelectorAll(selector);
     };
 
@@ -274,28 +325,41 @@ var Skeleton = (function(document, window, undefined){
 
             this._customMenus.each(function(align, object){
                 object.customMenus.each(function(key, domNode){
-                    var positions = self._customMenus[align].positions,
+                    var dynamicCssRule, dimensionAlias, firstAlign, secondAlign, res,
+                        p = self._customMenus[align].positions,
                         selector =  Array.prototype.slice.call(domNode.classList, 0).find(function(e,i,a){
-                        if(/sk-menu-/gi.exec(e)){ return e; }
+                        if(/sk-menu-/gi.exec(e)){ return true; }
                     });
+
+                    res = /left|right/.test(align);
+                    dimensionAlias = res ? 'width' : 'height';
+                    firstAlign = null;
+                    secondAlign = null;
+                    /*
+                    dynamicCssRule = '.'+selector+'{ '+
+                        align+': -'+domNode.css(dimensionAlias)+';'+
+                        'left:'+positions[3]+';'+
+                        'right:'+positions[1]+';'+
+                    '}';
+                    */
                     switch (align) {
                         case 'top':
-                            console.log(align, selector, positions, domNode.css('height'), domNode);
+                            dynamicCssRule = '.'+selector+'{ '+align+': -'+domNode.css('height')+'; left:'+p[3]+';right:'+p[1]+'; }';
                             break;
                         case 'right':
-                            console.log(align, selector, positions, domNode.css('width'), domNode);
+                            dynamicCssRule = '.'+selector+'{ '+align+': -'+domNode.css('width')+'; top:'+p[0]+';bottom:'+p[2]+'; }';
                             break;
                         case 'bottom':
-                            console.log(align, selector, positions, domNode.css('height'), domNode);
+                            dynamicCssRule = '.'+selector+'{ '+align+': -'+domNode.css('height')+'; left:'+p[3]+';right:'+p[1]+'; }';
                             break;
                         case 'left':
-                            console.log(align, selector, positions, domNode.css('width'), domNode);
+                            dynamicCssRule = '.'+selector+'{ '+align+': -'+domNode.css('width')+'; top:'+p[0]+';bottom:'+p[2]+'; }';
                             break;
                         default:
                             throw new Error();
                     }
-
-                    sheet.insertRule(nl('body { background-color: white; }'), sheet.cssRules.length);
+                    console.log(dynamicCssRule);
+                    //sheet.insertRule(nl(dynamicCssRule), sheet.cssRules.length);
                 });
             });
         },
