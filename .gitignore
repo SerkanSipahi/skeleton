@@ -1,6 +1,7 @@
 .idea
 .sass-cache
 node_modules
+vendor/scss/_*
 vendor/js/*.js
 vendor/scss/bootstrap/
 vendor/scss/bootstrap.scss

@@ -32,7 +32,7 @@ module.exports = function(grunt) {
         },
         copy: {
             sass: {
-                cwd : 'bower_components/bootstrap-sass-official/vendor/assets/stylesheets',
+                cwd : 'bower_components/bootstrap-sass-official/assets/stylesheets',
                 src : '**',
                 dest : 'vendor/scss',
                 flatten : false,
