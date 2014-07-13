@@ -1,4 +1,4 @@
-Liya  [![devDependency Status](https://david-dm.org/SerkanSipahi/skeleton/dev-status.svg)](https://david-dm.org/SerkanSipahi/skeleton#info=devDependencies)
+Skeleton  [![devDependency Status](https://david-dm.org/SerkanSipahi/skeleton/dev-status.svg)](https://david-dm.org/SerkanSipahi/skeleton#info=devDependencies)
 ===============
 
 #### Skeleton, in progress
