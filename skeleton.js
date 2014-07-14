@@ -36,153 +36,7 @@
 }());
 
 // >>> hybridjs
-var $ = null,
-    utility = null;
-
-(function(){
-
-    // > useful functions
-    // > write tests
-    utility = {
-        // > http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
-        rgbToHex : function(r, g, b) {
-            var match = null;
-            // > if we pass like this: 'rgb(255, 255, 255)'
-            if(typeof(r)==='string' && (match = /rgb\((\d+), (\d+), (\d+)\)/ig.exec(r))){
-                r=~~match[1], g=~~match[2], b=~~match[3];
-            }
-            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-        },
-        is : function(type, object){
-            return Object.prototype.toString.call(object) === '[object '+type+']';
-        }
-    };
-
-    // > global error handling
-    window.onerror = function errorHandler(message, url, line){
-        console.log('onerror', arguments);
-    };
-    // > for loop
-    Window.prototype.for = function(callback){
-
-        if (this === void 0 || this === null) { throw new TypeError(); }
-        var t = Object(this),
-            len = t.length >>> 0;
-
-        if (typeof callback !== 'function') { throw new TypeError(); }
-        for (var i = 0; i < len; i++){
-            if (i in t){
-                callback.call(t[i], i, t[i]);
-            }
-        }
-    };
-
-    // > each loop
-    Array.prototype.each =
-    NodeList.prototype.each =
-    HTMLCollection.prototype.each = function(callback){
-        Window.prototype.for.call(this, callback);
-    };
-    Object.prototype.each = function(callback){
-        for(var item in this){
-            if(!this.hasOwnProperty(item)) { continue; }
-            callback.call(this, item, this[item]);
-        }
-    };
-
-    // > get(index)
-    Array.prototype.get =
-    NodeList.prototype.get =
-    HTMLCollection.prototype.get = function(index){
-        return this[index];
-    };
-
-    // >> durch is(siehe oben) ersetzten!
-    // >> start >> please copy this part for using css handle in your project
-    var isTypeof = function(type, object){
-        return Object.prototype.toString.call(object).toLowerCase() === '[object '+type+']';
-    };
-
-    Array.prototype.css =
-    NodeList.prototype.css =
-    HTMLCollection.prototype.css = function(){
-        var res;
-        for(var i=0,length=this.length;i<length;i++){
-            this[i].css.apply(this[i], arguments);
-        }
-    };
-
-    HTMLElement.prototype.css = function(){
-
-        var self     = this,
-            args     = arguments,
-            res      = null,
-            style    = null,
-            tmpObj   = {},
-            writeCss = function(self, cssObject){
-                for(var attr in cssObject){
-                    self.style[attr] = cssObject[attr];
-                }
-            },
-            stylesheetRuleToCamelCase = function(attr){
-                if((capital = /-([a-z])/g.exec(attr)) && !(!!window.chrome)){
-                    attr = attr.replace(capital[0], capital[1].toUpperCase());
-                }
-                return attr;
-            },
-            objectCollectionToCamelCase = function(cssObject){
-                var tmpCssObject={}, tmpAttr;
-                for(var attr in cssObject) {
-                    tmpCssObject[stylesheetRuleToCamelCase(attr)] = cssObject[attr];
-                }
-                return tmpCssObject;
-            };
-
-        // > write operations
-        if(isTypeof('string', args[0]) && isTypeof('string', args[1]) && !args[2]){
-            tmpObj[args[0]] = args[1];
-            writeCss(self, objectCollectionToCamelCase(tmpObj));
-        } else if(isTypeof('object', args[0]) && isTypeof('undefined', args[1])){
-            writeCss(self, objectCollectionToCamelCase(args[0]));
-        } else if(args[0] && args[1] && args[2]){
-            args[2].call(self, args[0], args[0]);
-        } else if(isTypeof('object', args[0]) && isTypeof('function', args[1])){
-            args[1].call(self, args[0]);
-        }
-
-        // > read operations
-        if(isTypeof('string', args[0]) && !args[1] && !args[2]){
-            style = self.style[stylesheetRuleToCamelCase(args[0])];
-            if(style!==''){
-                res = self.style[args[0]];
-            }
-            else if(style===''){
-                res = window.getComputedStyle(self).getPropertyValue(
-                    stylesheetRuleToCamelCase(args[0])
-                );
-            }
-        }
-        return res;
-    };
-
-    // > Remove Element from DomTree
-    HTMLElement.prototype.remove = function(){
-        this.parentNode.removeChild(this);
-    };
-    NodeList.prototype.remove =
-    HTMLCollection.prototype.remove = function(){
-        this.each(function(){ this.remove(); });
-    };
-
-    // > map querySelectorAll to $
-    $ = document.querySelectorAll.bind(document);
-
-    // > find children of Element
-    HTMLElement.prototype.find = function(selector){
-        return this.querySelectorAll(selector);
-    };
-
-}());
+var $ = document.querySelectorAll.bind(document);
 
 var Skeleton = (function(document, window, undefined){
 
@@ -269,7 +123,7 @@ var Skeleton = (function(document, window, undefined){
             var tmpContainer = {}, $element = null, $customMenus = null,
                 positionCirle = ['top', 'right', 'bottom', 'left'];
 
-            this._coreMenus.each(function(key, element){
+            this._coreMenus.loop(function(key, element){
                 $element = $(element).get(0);
                 $customMenus = $element.find('.sk-custom-element');
 
@@ -282,10 +136,10 @@ var Skeleton = (function(document, window, undefined){
                         tmpContainer[element].positions = [];
                         tmpContainer[element].customMenus  = [];
                     }
-                    positionCirle.each(function(key, value){
+                    positionCirle.loop(function(key, value){
                         tmpContainer[element].positions.push( $element.css(value) );
                     });
-                    $customMenus.each(function(){
+                    $customMenus.loop(function(){
                         tmpContainer[element].customMenus.push(this);
                     });
                 }
@@ -306,7 +160,7 @@ var Skeleton = (function(document, window, undefined){
          * >> read/write operation
          **/
         _removeCustomMenusFromDomTree : function(){
-            this._coreMenus.each(function(key, element){
+            this._coreMenus.loop(function(key, element){
                 $(element).get(0).find('.sk-custom-element').remove();
             });
         },
@@ -323,8 +177,8 @@ var Skeleton = (function(document, window, undefined){
             document.head.appendChild(styleElement);
             sheet = styleElement.sheet ? styleElement.sheet : styleElement.styleSheet;
 
-            this._customMenus.each(function(align, object){
-                object.customMenus.each(function(key, domNode){
+            this._customMenus.loop(function(align, object){
+                object.customMenus.loop(function(key, domNode){
                     var dynamicCssRule, dimensionAlias, firstAlign, secondAlign, res,
                         p = self._customMenus[align].positions,
                         selector =  Array.prototype.slice.call(domNode.classList, 0).find(function(e,i,a){

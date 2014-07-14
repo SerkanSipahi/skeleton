@@ -14,7 +14,7 @@
     },
     "dependencies" : {
         "bootstrap-sass-official" : "~3.2",
-        "liya" : "~1.0.0"
+        "liya" : "~1.0.3"
     },
     "keywords": [
         "offcanvas",

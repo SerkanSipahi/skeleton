@@ -41,9 +41,14 @@ module.exports = function(grunt) {
             }
         },
         concat: {
-            classy: {
+            ready: {
                 files: {
                     'vendor/js/ready.js': 'bower_components/domready/ready.js'
+                }
+            },
+            liya: {
+                files: {
+                    'vendor/js/liya.js': 'bower_components/liya/liya.js'
                 }
             }
         },
